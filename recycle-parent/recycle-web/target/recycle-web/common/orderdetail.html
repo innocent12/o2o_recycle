@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>订单详情</title>
+		<link rel="stylesheet" href="../resource/css/bootstrap.min.css" />
+		<!-- <link rel="stylesheet" href="../resource/css/jquery-weui.min.css"> -->
+		<style>
+			#order_status {
+				width: 100%;
+				height: 7rem;
+				background: linear-gradient(to right, #31B0D5, #FFFFFF);
+			}
+			
+			#order_status span {
+				padding-left: 2rem;
+				line-height: 7rem;
+				color: white;
+				font-size: 20px;
+				font-family: "微软雅不黑", "微软雅黑", "黑体", sans-serif;
+			}
+			
+			#order_status img {
+				height: 100%;
+				float: right;
+			}
+			
+			#seller_info {
+				padding: 1rem;
+				margin: 1rem 0;
+				width: 100%;
+				color: #353535;
+				/*border-bottom: 1px solid #ADADAD !important;*/
+				/*border-top: 1px solid #ADADAD !important;*/
+			}
+			
+			#seller_info #seller_name {
+				font-size: 16px;
+				color: #888888;
+				font-family: "微软雅不黑", "微软雅黑", "黑体", sans-serif;
+			}
+			
+			#seller_info #seller_tel {
+				font-size: 14px;
+				color: #888888;
+				float: right;
+			}
+			
+			#seller_info #seller_addre {
+				font-size: 14px;
+				color: #888888;
+			}
+			
+			#order_info {
+				padding: 0 1rem;
+				font-size: 14px;
+				color: #888888;
+			}
+		</style>
+		<script type="text/javascript" src="../resource/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resource/js/jquery-weui.min.js"></script>
+		<script type="text/javascript" src="../resource/js/my-weixin.js"></script>
+		<script>
+			$(function() {
+
+				window.path=getContextPath();
+				
+				/**
+				 * 获取url指定参数值
+				 * 
+				 * @param {String} variable
+				 */
+				function getQueryVariable(variable) {
+					var query = window.location.search.substring(1);
+					var vars = query.split("&");
+					for(var i = 0; i < vars.length; i++) {
+						var pair = vars[i].split("=");
+						if(pair[0] == variable) {
+							return pair[1];
+						}
+					}
+					return(false);
+				}
+				
+				$.showLoading('加载中...');
+				var orderid = getQueryVariable("orderid");
+				var account = getQueryString("account");
+				var seller = getQueryString("seller");
+				console.log(orderid);
+				var data = {
+					"orderid": orderid,
+					"addressArea": "北京 北京市 东城区",
+					"se_account": seller
+				};
+				data = JSON.stringify(data);
+				
+				$.ajax({
+					type: "post",
+					url: "/"+path+"/"+"orderInfo/getC_OrderDetail",
+					async: true,
+					data: data,
+					contentType: 'application/json;charset=utf-8',
+					dataType: "json", //设置需要返回的数据类型
+					success: function(data) { //登陆成功后的处理
+						console.log(data);
+						showorderdetail(data);
+						$.hideLoading();
+					},
+					error: function() {
+						$.toast("加载失败", "forbidden"); //提示操作失败
+					}
+				});
+			});
+
+			function showorderdetail(data) {
+				var orderInfo = data[0].visualOrderInfo;
+				var orderstate=orderInfo.orderState;  //订单状态
+				
+				var orderstatuscon = $("#order_status span");
+				
+				if(orderstate == 1) { //未接单
+					orderstatuscon.text("未接单");
+				} else if(orderstate == 2) { //已接单
+					orderstatuscon.text("已接单");
+				} else if(orderstate == 3) { //待评价
+					orderstatuscon.text("待评价");
+				} else if(orderstate == 4) { //交易完成
+					orderstatuscon.text("交易完成");
+				} else { //订单已取消  orderstate == 0
+					orderstatuscon.text("已取消");
+				}
+
+				$("#seller_name").text("卖家：" + orderInfo.sellerName);
+				$("#seller_tel").text(orderInfo.sellerPhone);
+				$("#seller_addre").text("联系地址：" + orderInfo.addressArea + orderInfo.addressDetailed);
+				$("#order_amount").text("订单总额：" + orderInfo.orderAmount + "元");
+				$.each(data[0].orderItemList, function(index, content) {
+					var con = "";
+					con += '<tr id='+content.id+' ><td>' + index + '</td><td>'+content.resourceType+'——' + content.resourceName + '</td><td>' + content.resourceAmount + 'kg</td><td><a name="delete">删除</a></td></tr>';
+					$("tbody").append(con);
+				});
+				if(orderstate == 4){
+					$('a').attr('name','none');
+					$('a').text('不可用');
+				}
+				$("#orderid").text("订单编号：" + data[0].orderId);
+
+				if("" != data.collectoraccount) {
+					$("#collectoraccount").text("回收员编号：" + localStorage.account);
+				}
+
+				$("#orderplacetime").text("订单创建时间：" + orderInfo.orderPlaceTime);
+
+				if("" != data.orderfinishtime) {
+					$("#orderfinishtime").text("订单完成时间：" + orderInfo.orderFinishTime);
+				}
+
+				if("" != data.sellermessage) {
+					$("#sellermessage").text("用户留言：" + orderInfo.sellerMessage);
+				}
+
+			}
+		</script>
+	</head>
+
+	<body ontouchstart>
+		<!--订单详情页面-->
+		<div id="order_detail_page">
+
+			<!--交易状态-->
+			<div id="order_status">
+				<span>交易已完成</span>
+				<img src="../resource/images/test_1.png" />
+			</div>
+
+			<!--用户姓名、联系电话、地址-->
+			<div id="seller_info">
+				<div>
+					<!--姓名-->
+					<span id="seller_name">卖家：未知</span>
+					<!--联系电话-->
+					<span id="seller_tel">未知</span>
+				</div>
+				<!--地址-->
+				<div id="seller_addre">
+					联系地址：未知
+				</div>
+			</div>
+
+			<!--资源列表-->
+			<div id="order_amount">
+				订单总额：
+			</div>
+			<div class="table-responsive">
+				<!--带垂直线、斑马条纹的表格-->
+				<table class="table table-striped table-bordered">
+					<thead>
+						<tr>
+							<th>编号</th>
+							<th>资源名称</th>
+							<th>资源数量</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!--<tr>
+							<td>1</td>
+							<td>铁块</td>
+							<td>30kg</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>报纸</td>
+							<td>25kg</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>电视机</td>
+							<td>1台</td>
+						</tr>-->
+					</tbody>
+
+				</table>
+			</div>
+			<!--订单信息-->
+			<div id="order_info">
+				<!--订单编号-->
+				<div>
+					<span class="" id="orderid">订单编号：未知</span>
+				</div>
+				<!--回收员编号-->
+				<div>
+					<span class="" id="collectoraccount">回收员编号：未知</span>
+				</div>
+				<!--发布时间-->
+				<div>
+					<span class="" id="orderplacetime">交易发布时间：未知</span>
+				</div>
+				<!--完成时间-->
+				<div>
+					<span class="" id="orderfinishtime">交易完成时间：未知</span>
+				</div>
+				<!--买家留言-->
+				<div>
+					<span class="" id="sellermessage">卖家留言：未知</span>
+				</div>
+			</div>
+
+		</div>
+	<script>
+		function getQueryVariable(variable) {
+					var query = window.location.search.substring(1);
+					var vars = query.split("&");
+					for(var i = 0; i < vars.length; i++) {
+						var pair = vars[i].split("=");
+						if(pair[0] == variable) {
+							return pair[1];
+						}
+					}
+					return(false);
+				}
+	
+		var idList = [];
+		$(document).on('click','a',function(e){
+			var type = $(e.target).attr('name');
+			var id = $(e.target).parent().parent().attr('id');
+			if(type == 'delete'){
+				$(this).parent().parent().remove();
+				idList.push(id);
+				console.log(idList);
+				var orderid = getQueryVariable('orderid');
+				$.get("/"+path+"/"+"record/deleteOrderRecord?orderid=" + orderid+"&id="+id,function(data,status){
+						console.log("success");
+					})
+			}
+		});
+		
+		
+	</script>
+	</body>
+
+</html>

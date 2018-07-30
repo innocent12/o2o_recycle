@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>确认收货</title>
+		<link rel="stylesheet" href="../../resource/css/weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/jquery-weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/orderadd.css" />
+
+		<script type="text/javascript" src="../../resource/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../resource/js/jquery-weui.min.js"></script>
+		<script type="text/javascript" src="../../resource/js/my-weixin.js"></script>
+		<script>
+			
+			$(function(){
+				window.path=getContextPath();
+				var storage = window.localStorage;
+				var orderid = storage["orderid"];
+				var data = { //设置数据源
+						"orderid": orderid
+					};
+				$.ajax({
+					type: "post",
+					url: "/"+path+"/"+"orderInfo/selectOrderinfoDetailByorderid",
+					async: true,
+					contentType: 'application/json;charset=utf-8',
+					dataType: "json", //设置需要返回的数据类型
+					data: JSON.stringify(data),
+					success: function(data) { //登陆成功后的处理
+						console.log(data);
+						compile(data);
+					},
+					error: function() {
+						$.toast("加载失败", "forbidden"); //提示操作失败
+					}
+				});
+			});
+
+			function compile(data) {
+
+//				var resource_ul = $("#resource_ul");
+//
+//				$.each(data["resources"], function(j, item) {
+//					var con = "";
+//					con += '<li><div class="detail_list"><span>资源类名:</span>&nbsp;';
+//					con += '<input class="type_picker" value="' + item.resourcetype + '" name="resource_type" />';
+//					con += '&nbsp;<input class="name_picker" value="' + item.resourcename + '" name="resource_name" />';
+//					con += '<div class="res_num"><span>数量:</span><div class="weui-count"><a class="weui-count__btn weui-count__decrease"></a><input class="weui-count__number" type="number" value="' +
+//						item.resourceamount + '" name="resource_value"><span>KG</span><a class="weui-count__btn weui-count__increase"></a></div></div></div></li>';
+//					resource_ul.append(con);
+//					/*种类选择器*/
+//					$(".type_picker").picker({
+//						title: "请选择您的资源种类",
+//						cols: [{
+//							textAlign: 'center',
+//							values: ['金属', '塑料', '旧家电', '纸类', '旧电线', '旧手机', '旧电脑', '内存卡', '旧衣物']
+//							//如果你希望显示文案和实际值不同，可以在这里加一个displayValues: [.....]
+//						}]
+//					});
+//					/*资源名字选择器*/
+//					$(".name_picker").picker({
+//						title: "请选择您的资源名字",
+//						cols: [{
+//							textAlign: 'center',
+//							values: ['金属', '塑料', '旧家电', '纸类', '旧电线', '旧手机', '旧电脑', '内存卡', '旧衣物']
+//						}]
+//					});
+//
+//					/*计数器部分*/
+//					var MAX = 99,
+//						MIN = 1;
+//					$('.weui-count__decrease').click(function(e) {
+//						var $input = $(e.currentTarget).parent().find('.weui-count__number');
+//						var number = parseInt($input.val() || "0") - 1
+//						if(number < MIN) number = MIN;
+//						$input.val(number)
+//					});
+//					$('.weui-count__increase').click(function(e) {
+//						var $input = $(e.currentTarget).parent().find('.weui-count__number');
+//						var number = parseInt($input.val() || "0") + 1
+//						if(number > MAX) number = MAX;
+//						$input.val(number)
+//					});
+//				});
+
+				$("#sellername").text(data.sellername);
+				$("#sellerphone").text(data.sellerphone);
+				$("#selleraddress").text(data.selleraddressarea+data.selleraddressdetail);
+
+			}
+		</script>
+	</head>
+
+	<body>
+		<div>
+			<div class="first_part">
+				
+					<div class="detailed_res">
+						<span class="headName">资源详录</span>
+						<div class="res_list">
+							<ul id="resource_ul">
+								<!--<li>
+									<div class="detail_list">
+										<span>资源类名:</span>
+										<input class="type_picker" value="资源类型" name="resource_type" />
+										<input class="name_picker" value="资源名" name="resource_name" />
+										<div class="res_num">
+											<span>数量:</span>
+											<div class="weui-count">
+												<a class="weui-count__btn weui-count__decrease"></a>
+												<input class="weui-count__number" type="number" value="1" name="resource_value"><span>KG</span>
+												<a class="weui-count__btn weui-count__increase"></a>
+											</div>
+										</div>
+									</div>
+								</li>-->
+							</ul>
+							<div class="addRes">
+								<a href="javascript:(0);" id="getmore">添加资源</a>
+							</div>
+						</div>
+					</div>
+				
+			</div>
+			<div class="user_message">
+				<div class="detailed_info">
+					<span class="headName">居民信息</span>
+					<div class="show_message">
+						<p>
+							<label class="clabel">姓名:</label>
+							<label class="value_label" id="sellername">未知</label>
+						</p>
+						<p>
+							<label class="clabel">联系电话:</label>
+							<label class="value_label" id="sellerphone">未知</label>
+						</p>
+						<p>
+							<label class="clabel">联系地址:</label>
+							<label class="value_label" id="selleraddress">未知</label>
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<!--规避页面信息被覆盖-->
+			<div class="h50"></div>
+
+			<div class="bottomPart">
+				<div class="amount">
+					<span>合计：</span>
+				</div>
+				<div class="submmit" onclick="sub()">确认</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="../../resource/js/orderadd.js"></script>
+		<script>
+			/**
+			 * 动态删除该行
+			 */
+			$(document).on('click','img',function(e){
+				$(this).parent().parent().parent().parent().remove();
+			});
+			
+			/**
+			 * 获取url中的指定元素值
+			 * @param {Object} name
+			 */
+			function getQueryString(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+				var r = window.location.search.substr(1).match(reg);
+				if(r != null) {
+					return unescape(r[2]);
+				}
+				return null;
+			}
+
+			//重新设置规范的input标签名字
+			function resetNamePicker() {
+				var name_pickers = document.getElementsByClassName('name_picker');
+				var len = name_pickers.length;
+				for(var i = 0; i < name_pickers.length; i++) {
+					var index = i + 1;
+					name_pickers[i].setAttribute('name', 'resource_name' + index);
+				}
+			}
+			
+			function sub() {
+				
+				//重新规范name元素名字
+				resetNamePicker();
+			
+				//得到orderid
+				var orderid = getQueryString('orderid');
+				var d = {};
+				var r = $('form').serializeArray();
+				//逐个遍历数组对象
+				$.each(r, function() {
+					d[this.name] = this.value;
+				});
+				//输出到console
+				var str = JSON.stringify(d);
+				console.log(str);
+				
+				var array = [];
+				var count = 0;
+				var obj = {
+					'resourceType': '',
+					'resourceName': '',
+					'resourceValue': ''
+				};
+				//将表单对象格式化
+				$.each(d, function(index, content) {
+					//console.log(content+index);
+					if(index.match(/resource_type/i)) {
+						obj['resourceType'] = content;
+					} else if(index.match(/resource_name/i)) {
+						obj['resourceName'] = content;
+					} else if(index.match(/resource_value/i)) {
+						obj['resourceValue'] = content;
+					}
+					count++;
+					if(count == 3) {
+						count = 0;
+						array.push(obj);
+						console.log(array);
+						obj = {
+							'resourceType': '',
+							'resourceName': '',
+							'resourceValue': ''
+						};
+					}
+				});
+				
+				$.ajax({
+					type: "POST",
+					dataType: "json",
+					async: true,
+					url: "/"+path+"/"+"orderInfo/completeOrder?&orderid=" + orderid,
+					data: {
+						array:JSON.stringify(array)
+					},
+					success: function(result) {
+						//成功跳转至首页
+						var message = result.msg;
+						if(message == 'success'){
+							$.toast('发布成功');
+							window.location.href="/"+path+"/"+'common/collector/order.html';
+						}else if(message == 'fail'){
+							$.toast("操作失败","cancel");
+						}
+					},
+					error: function(){
+						console.log('fail');
+					}
+				});
+			}
+		</script>
+	</body>
+</html>

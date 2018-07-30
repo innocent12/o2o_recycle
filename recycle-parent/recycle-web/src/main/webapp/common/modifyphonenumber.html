@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>修改联系电话</title>
+		<link rel="stylesheet" href="../resource/css/weui.min.css" />
+		<link rel="stylesheet" href="../resource/css/jquery-weui.min.css" />
+		<style>
+			#msg {
+				margin: 0.5rem;
+				color: coral;
+				font-size: 12px;
+			}
+		</style>
+	</head>
+
+	<body ontouchstart>
+		<div id="modify_phonenumber_page">
+			<!--修改联系方式-->
+			<div class="weui-cells weui-cells_form">
+				<!--联系方式-->
+				<div class="weui-cell">
+					<div class="weui-cell__hd"><label class="weui-label">联系电话</label></div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" type="number" pattern="^1[0-9]{10}$" placeholder="请输入新的联系电话">
+					</div>
+				</div>
+			</div>
+			<!--提示-->
+			<div id="msg"></div>
+		</div>
+
+		<!--分隔块-->
+		<div class="separate"></div>
+
+		<!--提交按钮-->
+		<a href="javascript:;" class="weui-btn weui-btn_primary" onclick="check()">保存新号码</a>
+
+		<script src="../resource/js/jquery.min.js"></script>
+		<script src="../resource/js/jquery-weui.min.js"></script>
+		<script type="text/javascript" src="../resource/js/my-weixin.js"></script>
+		<script>
+		
+		window.path=getContextPath();
+			/**
+			 * 检查填写的信息是否合法
+			 * 若不合法，则不予提交并提示错误
+			 * 若合法，则提交后台访问数据库
+			 */
+			function check() {
+				var pattern = /^1[0-9]{10}$/;
+				var msg = document.getElementById("msg");
+				var phone = $('input[type=number]').val();
+				//var id = localStorage.id;
+				
+				if(phone == "" || phone == null) {
+					msg.innerHTML = "*新的联系电话不可为空！";
+				} else if(!pattern.test(phone)) {
+					msg.innerHTML = "*请输入合法的电话号码！";
+				} else {
+					msg.innerHTML = "";
+					//判断用户身份
+					if(localStorage.identity == 1) { //社区用户
+						str = "/"+path+"/"+"seller/updatePhone";
+						addre = "user/self.html";
+					} else if(localStorage.identity == 2) { //回收员
+						str = "/"+path+"/"+"collector/updateCollectorPhone";
+						addre = "collector/self.html";
+					}
+					var data  ={
+						"id":localStorage.id,
+						"sellerphone": phone
+					};
+					data = JSON.stringify(data);
+					$.ajax({
+						type: "post",
+						url: str,
+						async: true,
+						contentType: 'application/json;charset=utf-8',
+						dataType: "json", //设置需要返回的数据类型
+						data: data,
+						success: function(data) { //登陆成功后的处理
+							$.toast("修改成功"); //提示操作成功
+							localStorage.phone = phone;
+							window.location.href = addre;
+						},
+						error: function() {
+							$.toast("修改失败", "forbidden"); //提示操作失败
+						}
+					});
+				}
+			}
+		</script>
+	</body>
+
+</html>

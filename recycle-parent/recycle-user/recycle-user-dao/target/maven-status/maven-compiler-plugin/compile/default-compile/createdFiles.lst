@@ -1,0 +1,6 @@
+user\dao\AdminMapper.class
+user\dao\SellerAddressMapper.class
+user\dao\AddressMapper.class
+user\dao\AdminlogMapper.class
+user\dao\CollectorMapper.class
+user\dao\SellerMapper.class

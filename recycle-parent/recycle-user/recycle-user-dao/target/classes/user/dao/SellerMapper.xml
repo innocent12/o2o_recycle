@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="user.dao.SellerMapper" >
+  <resultMap id="BaseResultMap" type="user.pojo.Seller" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="sellerAccount" property="selleraccount" jdbcType="VARCHAR" />
+    <result column="sellerName" property="sellername" jdbcType="VARCHAR" />
+    <result column="sellerPassword" property="sellerpassword" jdbcType="VARCHAR" />
+    <result column="sellerOpenid" property="selleropenid" jdbcType="VARCHAR" />
+    <result column="sellerPhone" property="sellerphone" jdbcType="VARCHAR" />
+    <result column="sellerBalance" property="sellerbalance" jdbcType="DOUBLE" />
+    <result column="sellerRigisterDate" property="sellerrigisterdate" jdbcType="VARCHAR" />
+    <result column="sellerLevel" property="sellerlevel" jdbcType="VARCHAR" />
+    <result column="sellerPicture" property="sellerpicture" jdbcType="VARCHAR" />
+    <result column="xSite" property="xsite" jdbcType="DOUBLE" />
+    <result column="ySite" property="ysite" jdbcType="DOUBLE" />
+  </resultMap>
+  <resultMap type="user.vo.SellerDetailedInfo" id="SellerDetailedResultMap">
+  	<id column="addressId" property="addressId" jdbcType="VARCHAR" />
+  	<result column="addressArea" property="addressArea" jdbcType="VARCHAR" />
+  	<result column="addressDetail" property="addressDetailed" jdbcType="VARCHAR" />
+ <!-- 映射方法二 需要字段一一对应 	<association property="seller" javaType="user.pojo.Seller"/> -->
+	<association property="seller" resultMap="BaseResultMap"/>
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, sellerAccount, sellerName, sellerPassword, sellerOpenid, sellerPhone, sellerBalance, 
+    sellerRigisterDate, sellerLevel, sellerPicture, xSite, ySite
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="user.pojo.SellerExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from seller
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from seller
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 根据分页数据start 和size查询数据 -->
+    <select id="findByPage" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from seller
+        <if test="start!=null and size!=null">
+            limit #{start},#{size}
+        </if>
+    </select>
+  <!-- 用户登录时 用账号和密码查询 -->
+  <select id="selectByAccountAndPasswd" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from seller
+    where sellerAccount = #{arg0} and sellerPassword = #{arg1}
+  </select>
+ <!-- 用户登录时 用openid-->
+  <select id="selectByOpenid" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from seller
+    where selleropenid = #{selleropenid}
+  </select>
+ 
+ 
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from seller
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="user.pojo.SellerExample" >
+    delete from seller
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="user.pojo.Seller" >
+    insert into seller (id, sellerAccount, sellerName, 
+      sellerPassword, sellerOpenid, sellerPhone, 
+      sellerBalance, sellerRigisterDate, sellerLevel, 
+      sellerPicture, xSite, ySite
+      )
+    values (#{id,jdbcType=INTEGER}, #{selleraccount,jdbcType=VARCHAR}, #{sellername,jdbcType=VARCHAR}, 
+      #{sellerpassword,jdbcType=VARCHAR}, #{selleropenid,jdbcType=VARCHAR}, #{sellerphone,jdbcType=VARCHAR}, 
+      #{sellerbalance,jdbcType=DOUBLE}, #{sellerrigisterdate,jdbcType=TIMESTAMP}, #{sellerlevel,jdbcType=VARCHAR}, 
+      #{sellerpicture,jdbcType=VARCHAR}, #{xsite,jdbcType=DOUBLE}, #{ysite,jdbcType=DOUBLE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="user.pojo.Seller" >
+    insert into seller
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="selleraccount != null" >
+        sellerAccount,
+      </if>
+      <if test="sellername != null" >
+        sellerName,
+      </if>
+      <if test="sellerpassword != null" >
+        sellerPassword,
+      </if>
+      <if test="selleropenid != null" >
+        sellerOpenid,
+      </if>
+      <if test="sellerphone != null" >
+        sellerPhone,
+      </if>
+      <if test="sellerbalance != null" >
+        sellerBalance,
+      </if>
+      <if test="sellerrigisterdate != null" >
+        sellerRigisterDate,
+      </if>
+      <if test="sellerlevel != null" >
+        sellerLevel,
+      </if>
+      <if test="sellerpicture != null" >
+        sellerPicture,
+      </if>
+      <if test="xsite != null" >
+        xSite,
+      </if>
+      <if test="ysite != null" >
+        ySite,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="selleraccount != null" >
+        #{selleraccount,jdbcType=VARCHAR},
+      </if>
+      <if test="sellername != null" >
+        #{sellername,jdbcType=VARCHAR},
+      </if>
+      <if test="sellerpassword != null" >
+        #{sellerpassword,jdbcType=VARCHAR},
+      </if>
+      <if test="selleropenid != null" >
+        #{selleropenid,jdbcType=VARCHAR},
+      </if>
+      <if test="sellerphone != null" >
+        #{sellerphone,jdbcType=VARCHAR},
+      </if>
+      <if test="sellerbalance != null" >
+        #{sellerbalance,jdbcType=DOUBLE},
+      </if>
+      <if test="sellerrigisterdate != null" >
+        #{sellerrigisterdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sellerlevel != null" >
+        #{sellerlevel,jdbcType=VARCHAR},
+      </if>
+      <if test="sellerpicture != null" >
+        #{sellerpicture,jdbcType=VARCHAR},
+      </if>
+      <if test="xsite != null" >
+        #{xsite,jdbcType=DOUBLE},
+      </if>
+      <if test="ysite != null" >
+        #{ysite,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="user.pojo.SellerExample" resultType="java.lang.Integer" >
+    select count(*) from seller
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update seller
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.selleraccount != null" >
+        sellerAccount = #{record.selleraccount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sellername != null" >
+        sellerName = #{record.sellername,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sellerpassword != null" >
+        sellerPassword = #{record.sellerpassword,jdbcType=VARCHAR},
+      </if>
+      <if test="record.selleropenid != null" >
+        sellerOpenid = #{record.selleropenid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sellerphone != null" >
+        sellerPhone = #{record.sellerphone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sellerbalance != null" >
+        sellerBalance = #{record.sellerbalance,jdbcType=DOUBLE},
+      </if>
+      <if test="record.sellerrigisterdate != null" >
+        sellerRigisterDate = #{record.sellerrigisterdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.sellerlevel != null" >
+        sellerLevel = #{record.sellerlevel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sellerpicture != null" >
+        sellerPicture = #{record.sellerpicture,jdbcType=VARCHAR},
+      </if>
+      <if test="record.xsite != null" >
+        xSite = #{record.xsite,jdbcType=DOUBLE},
+      </if>
+      <if test="record.ysite != null" >
+        ySite = #{record.ysite,jdbcType=DOUBLE},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update seller
+    set id = #{record.id,jdbcType=INTEGER},
+      sellerAccount = #{record.selleraccount,jdbcType=VARCHAR},
+      sellerName = #{record.sellername,jdbcType=VARCHAR},
+      sellerPassword = #{record.sellerpassword,jdbcType=VARCHAR},
+      sellerOpenid = #{record.selleropenid,jdbcType=VARCHAR},
+      sellerPhone = #{record.sellerphone,jdbcType=VARCHAR},
+      sellerBalance = #{record.sellerbalance,jdbcType=DOUBLE},
+      sellerRigisterDate = #{record.sellerrigisterdate,jdbcType=TIMESTAMP},
+      sellerLevel = #{record.sellerlevel,jdbcType=VARCHAR},
+      sellerPicture = #{record.sellerpicture,jdbcType=VARCHAR},
+      xSite = #{record.xsite,jdbcType=DOUBLE},
+      ySite = #{record.ysite,jdbcType=DOUBLE}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="user.pojo.Seller" >
+    update seller
+    <set >
+      <if test="selleraccount != null" >
+        sellerAccount = #{selleraccount,jdbcType=VARCHAR},
+      </if>
+      <if test="sellername != null" >
+        sellerName = #{sellername,jdbcType=VARCHAR},
+      </if>
+      <if test="sellerpassword != null" >
+        sellerPassword = #{sellerpassword,jdbcType=VARCHAR},
+      </if>
+      <if test="selleropenid != null" >
+        sellerOpenid = #{selleropenid,jdbcType=VARCHAR},
+      </if>
+      <if test="sellerphone != null" >
+        sellerPhone = #{sellerphone,jdbcType=VARCHAR},
+      </if>
+      <if test="sellerbalance != null" >
+        sellerBalance = #{sellerbalance,jdbcType=DOUBLE},
+      </if>
+      <if test="sellerrigisterdate != null" >
+        sellerRigisterDate = #{sellerrigisterdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sellerlevel != null" >
+        sellerLevel = #{sellerlevel,jdbcType=VARCHAR},
+      </if>
+      <if test="sellerpicture != null" >
+        sellerPicture = #{sellerpicture,jdbcType=VARCHAR},
+      </if>
+      <if test="xsite != null" >
+        xSite = #{xsite,jdbcType=DOUBLE},
+      </if>
+      <if test="ysite != null" >
+        ySite = #{ysite,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="user.pojo.Seller" >
+    update seller
+    set sellerAccount = #{selleraccount,jdbcType=VARCHAR},
+      sellerName = #{sellername,jdbcType=VARCHAR},
+      sellerPassword = #{sellerpassword,jdbcType=VARCHAR},
+      sellerOpenid = #{selleropenid,jdbcType=VARCHAR},
+      sellerPhone = #{sellerphone,jdbcType=VARCHAR},
+      sellerBalance = #{sellerbalance,jdbcType=DOUBLE},
+      sellerRigisterDate = #{sellerrigisterdate,jdbcType=TIMESTAMP},
+      sellerLevel = #{sellerlevel,jdbcType=VARCHAR},
+      sellerPicture = #{sellerpicture,jdbcType=VARCHAR},
+      xSite = #{xsite,jdbcType=DOUBLE},
+      ySite = #{ysite,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectNormalInfoByAccount" parameterType="java.lang.String" resultType="user.vo.NormalSellerInfo">
+  	SELECT addressArea,addressDetailed,seller.sellerAccount,sellerName,sellerPhone FROM (address 
+	INNER JOIN seller_address 
+	ON seller_address.addressId=address.addressId)
+	INNER JOIN seller ON seller.sellerAccount=seller_address.sellerAccount 
+	AND seller_address.sellerAccount=#{_parameter}
+  </select>
+  <select id="selectDetailedInfoByAccount" resultMap="SellerDetailedResultMap">
+  	SELECT seller.*,seller_address.addressId,address.addressArea,addressDetailed 
+	FROM seller,seller_address,address
+	WHERE seller.sellerAccount=seller_address.sellerAccount
+	AND seller_address.addressId=address.addressId
+	AND seller.sellerAccount=#{_parameter}
+  </select>
+</mapper>

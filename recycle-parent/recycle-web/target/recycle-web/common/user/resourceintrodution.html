@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>资源详情</title>
+		<link rel="stylesheet" href="../../resource/css/weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/jquery-weui.min.css" />
+		<style>
+			.info_card_left {
+				position: fixed;
+				overflow: scroll;
+				top: 0;
+				left: 0;
+				background-color: #E5E5E5;
+				height: 100%;
+				width: 30%;
+				text-align: center;
+			}
+			
+			.info_card_left a {
+				color: #000000;
+			}
+			
+			.info_card_left a:hover {
+				display: block;
+				border-left: 2px solid #09BB07;
+				background-color: white;
+				color: #09BB07;
+			}
+			
+			.info_card_left_item {
+				line-height: 3rem;
+				height: 3rem;
+				width: 100%;
+			}
+			
+			.info_card_right {
+				margin-left: 33%;
+				margin-right: 3%;
+				height: 100%;
+				width: 64%;
+			}
+			
+			.resource_item {
+				display: none;
+			}
+			
+			.resource_item_active {
+				display: block;
+			}
+			
+			.info_card_right_item {
+				height: 3rem;
+				width: 100%;
+				border-bottom: 1px solid #B2B2B2;
+				line-height: 3rem;
+			}
+			
+			.info_card_right_item .item_left {
+				float: left;
+			}
+			
+			.info_card_right_item .item_right {
+				float: right;
+			}
+			
+			.info_card_right_item .item_right .type {
+				border: 1px solid #09BB07;
+				background-color: #09BB07;
+				color: white;
+				font-size: 14px;
+				/* 字体设置必须要大于14px，否则会出现格式混乱 */
+			}
+		</style>
+		<script src="../../resource/js/jquery.min.js"></script>
+		<script src="../../resource/js/jquery-weui.min.js"></script>
+		<script type="text/javascript" src="../../resource/js/my-weixin.js"></script>
+		<script>
+		window.path=getContextPath();
+		
+			$.ajax({
+				type: 'get',
+				dataType: 'json',
+				url: '../../resource/json/resourceintrodution.json',
+				contentType: 'application/json;charset=utf-8',
+				async: true,
+				success: function(data) {
+					insertresource(data);
+				},
+				error: function() {
+					$.toast("加载失败", "forbidden"); //提示操作失败
+				}
+			});
+
+			/*
+			$.ajax({
+				type: 'post',
+				dataType: 'json',
+				url: '',  //资源表查询controller
+				contentType: 'application/json;charset=utf-8',
+				async: true,
+				success: function(data) {
+					insertresource(data);
+				},
+				error: function() {
+					$.toast("加载失败", "forbidden"); //提示操作失败
+				}
+			});
+			*/
+
+			function insertresource(data) {
+				var con = "";
+				$.each(data, function(index, content) {
+					con = '<div class="info_card_right_item"><p class="item_left"><span id="name">' + content.resourceName + '</span></p><p class="item_right"><span class="type">可回收</span></p></div>';
+					if(content.resourceType == '纸类') {
+						$('#paper').append(con);
+					} else if(content.resourceType == '塑料') {
+						$('#plastics').append(con);
+					} else if(content.resourceType == '小家电') {
+						$('#lemp').append(con);
+					} else if(content.resourceType == '洗衣机') {
+						$('#washer').append(con);
+					} else if(content.resourceType == '空调') {
+						$('#conditioner').append(con);
+					} else if(content.resourceType == '电冰箱') {
+						$('#refrigerator').append(con);
+					} else if(content.resourceType == '电视机') {
+						$('#tv').append(con);
+					} else if(content.resourceType == '电脑') {
+						$('#computer').append(con);
+					} else if(content.resourceType == '手机') {
+						$('#phone').append(con);
+					} else if(content.resourceType == '电池') {
+						$('#cell').append(con);
+					} else if(content.resourceType == '金属') {
+						$('#metal').append(con);
+					} else if(content.resourceType == '厨房五金') {
+						$('#kitchen').append(con);
+					} else if(content.resourceType == '衣物') {
+						$('#clothes').append(con);
+					} else if(content.resourceType == '报废汽车') {
+						$('#car').append(con);
+					} else {
+						$('#other').append(con);
+					}
+				});
+			}
+		</script>
+	</head>
+
+	<body ontouchstart>
+		<!--整个页面-->
+		<div>
+
+			<!--左侧垂直导航条30%-->
+			<div class="info_card_left">
+				<!--纸类-->
+				<a href="#paper">
+					<div class="info_card_left_item">纸类</div>
+				</a>
+				<!--废塑料-->
+				<a href="#plastics">
+					<div class="info_card_left_item">塑料</div>
+				</a>
+				<!--小家电-->
+				<a href="#lemp">
+					<div class="info_card_left_item">小家电</div>
+				</a>
+				<!--洗衣机-->
+				<a href="#washer">
+					<div class="info_card_left_item">洗衣机</div>
+				</a>
+				<!--空调-->
+				<a href="#conditioner">
+					<div class="info_card_left_item">空调</div>
+				</a>
+				<!--电冰箱-->
+				<a href="#refrigerator">
+					<div class="info_card_left_item">电冰箱</div>
+				</a>
+				<!--电视机-->
+				<a href="#tv">
+					<div class="info_card_left_item">电视机</div>
+				</a>
+				<!--废电脑-->
+				<a href="#computer">
+					<div class="info_card_left_item">电脑</div>
+				</a>
+				<!--废手机-->
+				<a href="#phone">
+					<div class="info_card_left_item">手机</div>
+				</a>
+				<!--废电池-->
+				<a href="#cell">
+					<div class="info_card_left_item">电池</div>
+				</a>
+				<!--废金属-->
+				<a href="#metal">
+					<div class="info_card_left_item">金属</div>
+				</a>
+				<!--厨房五金-->
+				<a href="#kitchen">
+					<div class="info_card_left_item">厨房五金</div>
+				</a>
+				<!--旧衣物-->
+				<a href="#clothes">
+					<div class="info_card_left_item">衣物</div>
+				</a>
+				<!--报废汽车-->
+				<a href="#car">
+					<div class="info_card_left_item">报废汽车</div>
+				</a>
+				<!--其他-->
+				<a href="#other">
+					<div class="info_card_left_item">其他</div>
+				</a>
+			</div>
+
+			<!--右侧主体内容70%-->
+			<div class="info_card_right">
+				<!--纸类-->
+				<div class="resource_item_active" id="paper"></div>
+				<!--废塑料-->
+				<div class="resource_item" id="plastics"></div>
+				<!--小家电-->
+				<div class="resource_item" id="lemp"></div>
+				<!--洗衣机-->
+				<div class="resource_item" id="washer"></div>
+				<!--空调-->
+				<div class="resource_item" id="conditioner"></div>
+				<!--电冰箱-->
+				<div class="resource_item" id="refrigerator"></div>
+				<!--电视机-->
+				<div class="resource_item" id="tv"></div>
+				<!--废电脑-->
+				<div class="resource_item" id="computer"></div>
+				<!--废手机-->
+				<div class="resource_item" id="phone"></div>
+				<!--废电池-->
+				<div class="resource_item" id="cell"></div>
+				<!--废金属-->
+				<div class="resource_item" id="metal"></div>
+				<!--厨房五金-->
+				<div class="resource_item" id="kitchen"></div>
+				<!--旧衣物-->
+				<div class="resource_item" id="clothes"></div>
+				<!--报废汽车-->
+				<div class="resource_item" id="car"></div>
+				<!--其他-->
+				<div class="resource_item" id="other"></div>
+			</div>
+		</div>
+
+		<script>
+			$('.info_card_left_item').click(function() {
+				var num = $('.info_card_left_item').index(this); //获取当前被点击的是第几个a标签（num+1)
+
+				$('.resource_item_active').attr('class', 'resource_item'); //将当前活跃div设为不活跃状态
+
+				$('.resource_item:eq(' + num + ')').attr('class', 'resource_item_active'); //显示对应的第num+1个div块
+			});
+		</script>
+	</body>
+
+</html>

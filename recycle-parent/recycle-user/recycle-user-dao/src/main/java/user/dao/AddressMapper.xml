@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="user.dao.AddressMapper" >
+  <resultMap id="BaseResultMap" type="user.pojo.Address" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="addressId" property="addressid" jdbcType="VARCHAR" />
+    <result column="addressArea" property="addressarea" jdbcType="VARCHAR" />
+    <result column="addressDetailed" property="addressdetailed" jdbcType="VARCHAR" />
+    <result column="addressName" property="addressname" jdbcType="VARCHAR" />
+    <result column="addressPhone" property="addressphone" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, addressId, addressArea, addressDetailed, addressName, addressPhone
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="user.pojo.AddressExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from address
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from address
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from address
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="user.pojo.AddressExample" >
+    delete from address
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="user.pojo.Address" >
+    insert into address (id, addressId, addressArea, 
+      addressDetailed, addressName, addressPhone
+      )
+    values (#{id,jdbcType=INTEGER}, #{addressid,jdbcType=VARCHAR}, #{addressarea,jdbcType=VARCHAR}, 
+      #{addressdetailed,jdbcType=VARCHAR}, #{addressname,jdbcType=VARCHAR}, #{addressphone,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="user.pojo.Address" >
+    insert into address
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addressid != null" >
+        addressId,
+      </if>
+      <if test="addressarea != null" >
+        addressArea,
+      </if>
+      <if test="addressdetailed != null" >
+        addressDetailed,
+      </if>
+      <if test="addressname != null" >
+        addressName,
+      </if>
+      <if test="addressphone != null" >
+        addressPhone,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="addressid != null" >
+        #{addressid,jdbcType=VARCHAR},
+      </if>
+      <if test="addressarea != null" >
+        #{addressarea,jdbcType=VARCHAR},
+      </if>
+      <if test="addressdetailed != null" >
+        #{addressdetailed,jdbcType=VARCHAR},
+      </if>
+      <if test="addressname != null" >
+        #{addressname,jdbcType=VARCHAR},
+      </if>
+      <if test="addressphone != null" >
+        #{addressphone,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="user.pojo.AddressExample" resultType="java.lang.Integer" >
+    select count(*) from address
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update address
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.addressid != null" >
+        addressId = #{record.addressid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.addressarea != null" >
+        addressArea = #{record.addressarea,jdbcType=VARCHAR},
+      </if>
+      <if test="record.addressdetailed != null" >
+        addressDetailed = #{record.addressdetailed,jdbcType=VARCHAR},
+      </if>
+      <if test="record.addressname != null" >
+        addressName = #{record.addressname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.addressphone != null" >
+        addressPhone = #{record.addressphone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update address
+    set id = #{record.id,jdbcType=INTEGER},
+      addressId = #{record.addressid,jdbcType=VARCHAR},
+      addressArea = #{record.addressarea,jdbcType=VARCHAR},
+      addressDetailed = #{record.addressdetailed,jdbcType=VARCHAR},
+      addressName = #{record.addressname,jdbcType=VARCHAR},
+      addressPhone = #{record.addressphone,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="user.pojo.Address" >
+    update address
+    <set >
+      <if test="addressid != null" >
+        addressId = #{addressid,jdbcType=VARCHAR},
+      </if>
+      <if test="addressarea != null" >
+        addressArea = #{addressarea,jdbcType=VARCHAR},
+      </if>
+      <if test="addressdetailed != null" >
+        addressDetailed = #{addressdetailed,jdbcType=VARCHAR},
+      </if>
+      <if test="addressname != null" >
+        addressName = #{addressname,jdbcType=VARCHAR},
+      </if>
+      <if test="addressphone != null" >
+        addressPhone = #{addressphone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="user.pojo.Address" >
+    update address
+    set addressId = #{addressid,jdbcType=VARCHAR},
+      addressArea = #{addressarea,jdbcType=VARCHAR},
+      addressDetailed = #{addressdetailed,jdbcType=VARCHAR},
+      addressName = #{addressname,jdbcType=VARCHAR},
+      addressPhone = #{addressphone,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1, user-scalable=no">
+		<title>订单</title>
+		<link rel="stylesheet" href="../../resource/css/weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/jquery-weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/index.css" />
+		<script src="../../resource/js/jquery.min.js "></script>
+		<script src="../../resource/js/jquery-weui.min.js "></script>
+		<script src="../../resource/js/my-weixin.js"></script>
+		<script>
+		
+			
+			/**
+			 * 
+			 * 向后台请求订单信息
+			 * 
+			 */
+			$(function() {
+				window.path=getContextPath();
+				var code = getQueryString('code');
+				OpenidLogin(code);
+				var identity = localStorage['identity'];
+				if(identity == 1){
+					window.location.href = "/"+path+"/"+"common/user/order.html";
+				}
+				
+				var storage = window.localStorage;
+				var authlogin = storage["authlogin"]; //用户是否登录
+				
+				if(1 == authlogin || identity == 2) {
+					var account = storage["account"]; //获取回收员账号
+					var addressArea = "北京 北京市 东城区";
+					var datas = { //设置数据源
+						"account": account,
+						"addressArea": addressArea
+					};
+					$.showLoading("数据加载中...");
+					datas = JSON.stringify(datas);
+					$.ajax({
+						type: "post",
+						url: "/"+path+"/"+"orderInfo/getCo_Orders",
+						async: true,
+						contentType: 'application/json;charset=utf-8',
+						dataType: "json", //设置需要返回的数据类型
+						data: datas,
+						success: function(data) { //登陆成功后的处理
+							$.hideLoading();
+							console.log(data);
+							insertorder(data);
+						},
+						error: function() {
+							$.toast("加载失败", "forbidden"); //提示操作失败
+						}
+					});
+				} else {
+					alert("您还未登录，正在为您跳转登录页面...");
+				}
+
+			});
+
+			/**
+			 * 向页面中插入订单信息
+			 * 
+			 * @param {Object} data
+			 */
+			function insertorder(data) {
+				var orderstate1 = $('#orderstate1'); //未接单
+				var orderstate2 = $('#orderstate2'); //已接单
+				var orderstate0 = $('#orderstate0'); //交易取消
+				var orderstate3 = $('#orderstate3'); //待评价
+				var orderstate4 = $('#orderstate4'); //交易完成
+
+				//遍历json数据
+				$.each(data, function(index, content) {
+					var con = ""; //存储页面内容
+					var tempCon = '</em></div><div class="weui-form-preview__bd"><div class="weui-form-preview__item"><label class="weui-form-preview__label">订单编号</label><span class="weui-form-preview__value">' + content.orderId
+					+'</span></div><div class="weui-form-preview__item"><label class="weui-form-preview__label">创建时间</label><span class="weui-form-preview__value">' + content.orderPlaceTime
+					+'</span></div><div class="weui-form-preview__item"><label class="weui-form-preview__label">联系地址</label><span class="weui-form-preview__value">' + content.addressArea + content.addressDetailed
+					+'</span></div></div><div class="weui-form-preview__ft">';
+					console.log(content);
+					con += '<!--单个订单信息--> <div class = "weui-form-preview" ><div class = "weui-form-preview__hd" ><label class = "weui-form-preview__label" >订单状态</label><em class="weui-form-preview__value"> ';
+
+					if(content.orderState == 1) { //未接单
+						con += '未接单';
+						con +=tempCon;
+						con += '<button class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:;" id="' + content.orderId + '" onclick="changetotwo(this)">我要接单</button>';
+						con += '<button class="weui-form-preview__btn weui-form-preview__btn_primary " accountid="' + content.sellerAccount + '" href="javascript:; " id="' + content.orderId + '" onclick = "orderdetail(this)">查看详情</button></div></div><!--分隔块--><div class="separate "></div>';
+						orderstate1.append(con);
+					} else if(content.orderState == 2) { //已接单
+						con += '已接单';
+						con +=tempCon;
+						con += '<button class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:;" id="' + content.orderId + '" onclick="changetothree(this)">确认收货</button>';
+						con += '<button class="weui-form-preview__btn weui-form-preview__btn_primary " accountid="' + content.sellerAccount + '" href="javascript:; " id="' + content.orderId + '" onclick = "orderdetail(this)">查看详情</button></div></div><!--分隔块--><div class="separate "></div>';
+						orderstate2.append(con);
+					} else if(content.orderState == 3) { //待评价
+						con += '待评价';
+						con +=tempCon;
+						con += '<a class="weui-form-preview__btn weui-form-preview__btn_default " href="javascript: " id="' + content.orderId + '">待评价</a>';
+						con += '<button class="weui-form-preview__btn weui-form-preview__btn_primary " accountid="' + content.sellerAccount + '" href="javascript:; " id="' + content.orderId + '" onclick = "orderdetail(this)">查看详情</button></div></div><!--分隔块--><div class="separate "></div>';
+						orderstate3.append(con);
+					} else if(content.orderState == 4) { //交易完成
+						con += '交易完成';
+						con +=tempCon;
+						con += '<a class="weui-form-preview__btn weui-form-preview__btn_default " href="javascript: " id="' + content.orderId + '">交易完成</a>';
+						con += '<button class="weui-form-preview__btn weui-form-preview__btn_primary " accountid="' + content.sellerAccount + '" href="javascript:; " id="' + content.orderId + '" onclick = "orderdetail(this)">查看详情</button></div></div><!--分隔块--><div class="separate "></div>';
+						orderstate4.append(con);
+					} else if(content.orderstate == 0) { //订单已取消  content.orderstate == 0
+						con += '交易取消';
+						con += tempCon;
+						con += '<a class="weui-form-preview__btn weui-form-preview__btn_default " href="javascript: " id="' + content.orderId + '">交易取消</a>';
+						con += '<button class="weui-form-preview__btn weui-form-preview__btn_primary " accountid="' + content.sellerAccount + '" href="javascript:; " id="' + content.orderId + '" onclick = "orderdetail(this)">查看详情</button></div></div><!--分隔块--><div class="separate "></div>';
+						orderstate0.append(con);
+					}else{//数据输入完成
+						//TODO尾部元素
+						console.log('success');
+					}
+				});
+			}
+		</script>
+	</head>
+
+	<body ontouchstart>
+		<div class="weui-tab">
+			<!--主体页面-->
+			<div class="weui-tab__bd">
+
+				<!--订单-->
+				<div id="tab2" class="weui-tab__bd-item weui-tab__bd-item--active">
+					<!--订单页面内容-->
+					<div id="tab2_body">
+						<div id="orderstate1"></div>
+						<div id="orderstate2"></div>
+						<div id="orderstate0"></div>
+						<div id="orderstate3"></div>
+						<div id="orderstate4"></div>
+					</div>
+
+					<!--底部提示-->
+					<div class="weui-loadmore weui-loadmore_line ">
+						<span class="weui-loadmore__tips ">嘿，我可是有底线的哦</span>
+					</div>
+
+					<!--规避下方内容被导航条覆盖-->
+					<div class="h50 "></div>
+				</div>
+
+			</div>
+
+			<!--底部导航栏-->
+			<div class="weui-tabbar ">
+				<a href="order.html " class="weui-tabbar__item weui-bar__item--on ">
+					<div class="weui-tabbar__icon ">
+						<img src="../../resource/images/icon_nav_button.png " alt=" ">
+					</div>
+					<p class="weui-tabbar__label ">
+						订单
+					</p>
+				</a>
+				<a href="map.html " class="weui-tabbar__item ">
+					<div class="weui-tabbar__icon ">
+						<img src="../../resource/images/icon_nav_article.png " alt=" ">
+					</div>
+					<p class="weui-tabbar__label ">
+						地图
+					</p>
+				</a>
+				<a href="self.html " class="weui-tabbar__item ">
+					<div class="weui-tabbar__icon ">
+						<img src="../../resource/images/icon_nav_cell.png " alt=" ">
+					</div>
+					<p class="weui-tabbar__label ">
+						我的
+					</p>
+				</a>
+			</div>
+		</div>
+		<script src="../../resource/js/fastclick.js "></script>
+		<script>
+			$(function() {
+				FastClick.attach(document.body);
+			});
+
+			/**
+			 * 点击“我要接单”
+			 * 
+			 * @param {Object} obj
+			 */
+			function changetotwo(obj) {
+				var orderid = obj.id;
+				var datas = { //设置数据源
+					"orderid": orderid
+				};
+				datas = JSON.stringify(datas);
+				$.ajax({
+					type: "post",
+					url: "/"+path+"/"+"orderInfo/reciveOrder",
+					async: true,
+					contentType: 'application/json;charset=utf-8',
+					dataType: "json", //设置需要返回的数据类型
+					data: datas,
+					success: function(data) { //登陆成功后的处理
+						window.location.reload(); //重新加载当前页面
+					},
+					error: function() {
+						$.toast("操作失败", "forbidden"); //提示操作失败
+					}
+				});
+			}
+
+			/**
+			 * 点击“确认收货”
+			 * 
+			 * @param {Object} obj
+			 */
+			function changetothree(obj) {
+				var orderid = obj.id;
+				var datas = { //设置数据源
+					"orderid": orderid
+				};
+				datas = JSON.stringify(datas);
+				$.ajax({
+					type: "post",
+					url: "/"+path+"/"+"orderInfo/reciveingOrder",
+					async: true,
+					contentType: 'application/json;charset=utf-8',
+					dataType: "json", //设置需要返回的数据类型
+					data: datas,
+					success: function(data) { //成功后的处理
+						localStorage.orderid = orderid;
+						window.location.href = "resourcecompile.html?orderid="+orderid; //跳转到订单确认页面
+					},
+					error: function() {
+						$.toast("操作失败", "forbidden"); //提示操作失败
+					}
+				});
+			}
+
+			/**
+			 * 点击“查看详情”
+			 * 
+			 * @param {Object} obj
+			 */
+			function orderdetail(obj) {
+				 console.log(obj);
+				var orderid = obj.id; //获取当前订单orderid
+				var account = $(obj).attr('accountid');
+				var storage = window.localStorage;
+				var collector = storage.account;
+				//storage["orderid"] = orderid; //将当前orderid存储到localStorage中
+				window.location.href = "/"+path+"/"+"common/orderdetail.html?orderid="+orderid+"&account="+collector+"&seller="+account; //跳转到订单详情
+			}
+		</script>
+	</body>
+
+</html>

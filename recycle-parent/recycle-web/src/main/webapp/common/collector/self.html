@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1, user-scalable=no">
+		<title>我的</title>
+		<link rel="stylesheet" href="../../resource/css/weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/jquery-weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../../resource/css/index.css" />
+		<script src="../../resource/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../resource/js/my-weixin.js"/>
+		<script>
+			/**
+			 * 
+			 * 获取缓存中的回收员个人信息
+			 * 
+			 */
+			$(function() {
+				window.path=getContextPath();
+				var storage = window.localStorage;
+				//				storage["name"] = "胡晓斌";
+				//				storage["level"] = "0";
+				//				storage["phone"] = "135448524745";
+				var collectorname = storage["name"];
+				var collectorlevel = storage["level"];
+				var collectorphone = storage["phone"];
+				if("" != collectorname) {
+					$("#collectorname").text(collectorname); //回收员姓名
+					console.log(111);
+				}
+				if("" != collectorlevel) {
+					$("#collectorlevel").text("lv " + collectorlevel); //回收员等级
+				}
+				if("" != collectorphone) {
+					$("#collectorphone").text(collectorphone); //回收员联系方式
+				}
+				console.log(collectorname+collectorlevel+collectorphone);
+				console.log(1111);
+			});
+		</script>
+	</head>
+
+	<body ontouchstart>
+		<div class="weui-tab">
+			<!--主体页面-->
+			<div class="weui-tab__bd">
+
+				<!--我的-->
+				<div id="tab3" class="weui-tab__bd-item weui-tab__bd-item--active">
+					<div id="tab3_body">
+						<!--头像-->
+						<div class="headPortrait">
+							<img src="../../resource/images/test_user_headPortrait.png" />
+						</div>
+
+						<!--昵称-->
+						<div class="nickname">
+							<span id="collectorname">无</span>
+						</div>
+
+						<!--列表1：我的订单、我的地址、我的钱包、我的等级、联系方式-->
+						<div class="weui-cells">
+							<a class="weui-cell weui-cell_access" href="order.html">
+								<div class="weui-cell__hd">
+									<i class="fa fa-lightbulb-o"></i>
+								</div>
+								<div class="weui-cell__bd">
+									<p>
+										&nbsp;&nbsp;我的订单
+									</p>
+								</div>
+								<div class="weui-cell__ft"></div>
+							</a>
+							<a class="weui-cell weui-cell_access" href="javascript:;">
+								<div class="weui-cell__hd">
+									<i class="fa fa-thermometer-three-quarters"></i>
+								</div>
+								<div class="weui-cell__bd">
+									<p>
+										&nbsp;&nbsp;我的等级
+									</p>
+								</div>
+								<div class="weui-cell__ft" id="collectorlevel">
+									lv0
+								</div>
+							</a>
+							<a class="weui-cell weui-cell_access" href="../modifyphonenumber.html">
+								<div class="weui-cell__hd">
+									<i class="fa fa-phone"></i>
+								</div>
+								<div class="weui-cell__bd">
+									<p>
+										&nbsp;&nbsp;联系方式
+									</p>
+								</div>
+								<div class="weui-cell__ft" id="collectorphone">
+									无
+								</div>
+							</a>
+						</div>
+
+						<!--列表2：修改密码、关于我们-->
+						<div class="weui-cells">
+							<a class="weui-cell weui-cell_access" href="../modifypassword.html">
+								<div class="weui-cell__hd">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="weui-cell__bd">
+									<p>
+										&nbsp;&nbsp;修改密码
+									</p>
+								</div>
+								<div class="weui-cell__ft"></div>
+							</a>
+							<a class="weui-cell weui-cell_access" href="../aboutus.html">
+								<div class="weui-cell__hd">
+									<i class="fa fa-address-book-o"></i>
+								</div>
+								<div class="weui-cell__bd">
+									<p>
+										&nbsp;&nbsp;关于我们
+									</p>
+								</div>
+								<div class="weui-cell__ft"></div>
+							</a>
+						</div>
+
+						<!--分隔块-->
+						<div class="separate"></div>
+
+						<!--退出按钮-->
+						<a href="javascript:;" class="weui-btn weui-btn_disabled weui-btn_warn" onclick="exit()">
+							退出登录
+						</a>
+					</div>
+
+					<!--分隔退出按钮和底部导航条-->
+					<br />
+					<!--规避下方内容被导航条覆盖-->
+					<div class="h50"></div>
+				</div>
+			</div>
+
+			<!--底部导航栏-->
+			<div class="weui-tabbar">
+				<a href="order.html" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img src="../../resource/images/icon_nav_button.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">
+						订单
+					</p>
+				</a>
+				<a href="map.html" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img src="../../resource/images/icon_nav_article.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">
+						地图
+					</p>
+				</a>
+				<a href="self.html" class="weui-tabbar__item weui-bar__item--on">
+					<div class="weui-tabbar__icon">
+						<img src="../../resource/images/icon_nav_cell.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">
+						我的
+					</p>
+				</a>
+			</div>
+		</div>
+		<script src="../../resource/js/jquery-weui.min.js"></script>
+		<script src="../../resource/js/fastclick.js"></script>
+		<script>
+		/**
+		*页面加载完执行
+		**/
+			$(function() {
+				window.path=getContextPath();
+				var storage = window.localStorage;
+				//				storage["name"] = "胡晓斌";
+				//				storage["level"] = "0";
+				//				storage["phone"] = "135448524745";
+				var collectorname = storage["name"];
+				var collectorlevel = storage["level"];
+				var collectorphone = storage["phone"];
+				if("" != collectorname) {
+					$("#collectorname").text(collectorname); //回收员姓名
+				}
+				if("" != collectorlevel) {
+					$("#collectorlevel").text("lv " + collectorlevel); //回收员等级
+				}
+				if("" != collectorphone) {
+					$("#collectorphone").text(collectorphone); //回收员联系方式
+				}
+				FastClick.attach(document.body);
+				
+				$.ajax({
+					type: "get",
+					url: "/"+path+"/"+"collector/getCo_Address",
+					contentType: 'application/json;charset=utf-8',
+					async: true, //异步
+					data: {
+						"addressId":localStorage.addressid
+					},
+					dataType: "json", //设置需要返回的数据类型
+					success: function(data){
+						if(data.msg == "success"){
+							localStorage["addressArea"]=data.addressarea;
+							localStorage["addressName"]=data.addressname;
+						}
+					},
+					error: function(data){
+						console.log("error");
+					}
+				});
+			});
+			
+			function exit() {
+				//$.confirm("您确认要退出本系统吗？", "确认退出");
+//				$.alert("退出功能暂时关闭", "提醒！");
+				$.confirm("您确定要退出吗?", "确认退出?", function() {
+		        	$.toast("退出成功!");
+		        	localStorage.clear();
+		        	window.location.href="../login.html";
+		        }, function() {
+		          //取消操作
+		        });
+			}
+		</script>
+	</body>
+
+</html>

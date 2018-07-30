@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="user.dao.AdminMapper" >
+  <resultMap id="BaseResultMap" type="user.pojo.Admin" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="adminId" property="adminid" jdbcType="VARCHAR" />
+    <result column="adminName" property="adminname" jdbcType="VARCHAR" />
+    <result column="adminPassword" property="adminpassword" jdbcType="VARCHAR" />
+    <result column="adminPhone" property="adminphone" jdbcType="VARCHAR" />
+    <result column="adminPicture" property="adminpicture" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, adminId, adminName, adminPassword, adminPhone, adminPicture
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="user.pojo.AdminExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from admin
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from admin
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from admin
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="user.pojo.AdminExample" >
+    delete from admin
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="user.pojo.Admin" >
+    insert into admin (id, adminId, adminName, 
+      adminPassword, adminPhone, adminPicture
+      )
+    values (#{id,jdbcType=INTEGER}, #{adminid,jdbcType=VARCHAR}, #{adminname,jdbcType=VARCHAR}, 
+      #{adminpassword,jdbcType=VARCHAR}, #{adminphone,jdbcType=VARCHAR}, #{adminpicture,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="user.pojo.Admin" >
+    insert into admin
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="adminid != null" >
+        adminId,
+      </if>
+      <if test="adminname != null" >
+        adminName,
+      </if>
+      <if test="adminpassword != null" >
+        adminPassword,
+      </if>
+      <if test="adminphone != null" >
+        adminPhone,
+      </if>
+      <if test="adminpicture != null" >
+        adminPicture,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="adminid != null" >
+        #{adminid,jdbcType=VARCHAR},
+      </if>
+      <if test="adminname != null" >
+        #{adminname,jdbcType=VARCHAR},
+      </if>
+      <if test="adminpassword != null" >
+        #{adminpassword,jdbcType=VARCHAR},
+      </if>
+      <if test="adminphone != null" >
+        #{adminphone,jdbcType=VARCHAR},
+      </if>
+      <if test="adminpicture != null" >
+        #{adminpicture,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="user.pojo.AdminExample" resultType="java.lang.Integer" >
+    select count(*) from admin
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update admin
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.adminid != null" >
+        adminId = #{record.adminid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.adminname != null" >
+        adminName = #{record.adminname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.adminpassword != null" >
+        adminPassword = #{record.adminpassword,jdbcType=VARCHAR},
+      </if>
+      <if test="record.adminphone != null" >
+        adminPhone = #{record.adminphone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.adminpicture != null" >
+        adminPicture = #{record.adminpicture,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update admin
+    set id = #{record.id,jdbcType=INTEGER},
+      adminId = #{record.adminid,jdbcType=VARCHAR},
+      adminName = #{record.adminname,jdbcType=VARCHAR},
+      adminPassword = #{record.adminpassword,jdbcType=VARCHAR},
+      adminPhone = #{record.adminphone,jdbcType=VARCHAR},
+      adminPicture = #{record.adminpicture,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="user.pojo.Admin" >
+    update admin
+    <set >
+      <if test="adminid != null" >
+        adminId = #{adminid,jdbcType=VARCHAR},
+      </if>
+      <if test="adminname != null" >
+        adminName = #{adminname,jdbcType=VARCHAR},
+      </if>
+      <if test="adminpassword != null" >
+        adminPassword = #{adminpassword,jdbcType=VARCHAR},
+      </if>
+      <if test="adminphone != null" >
+        adminPhone = #{adminphone,jdbcType=VARCHAR},
+      </if>
+      <if test="adminpicture != null" >
+        adminPicture = #{adminpicture,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="user.pojo.Admin" >
+    update admin
+    set adminId = #{adminid,jdbcType=VARCHAR},
+      adminName = #{adminname,jdbcType=VARCHAR},
+      adminPassword = #{adminpassword,jdbcType=VARCHAR},
+      adminPhone = #{adminphone,jdbcType=VARCHAR},
+      adminPicture = #{adminpicture,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

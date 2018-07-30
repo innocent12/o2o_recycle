@@ -1,0 +1,8 @@
+order\pojo\OrderInfoExample.class
+order\vo\OrderResource.class
+order\pojo\OrderInfoExample$GeneratedCriteria.class
+order\pojo\OrderInfoExample$Criteria.class
+order\pojo\OrderInfo.class
+order\pojo\OrderInfoExample$Criterion.class
+order\dto\OrderDetail.class
+order\vo\VisualOrderInfo.class

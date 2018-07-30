@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>关于我们</title>
+		<link rel="stylesheet" href="../resource/css/weui.min.css" />
+		<link rel="stylesheet" href="../resource/css/jquery-weui.min.css" />
+		<style>
+			.help {
+				margin: 1rem;
+				font-size: 14px;
+				color: gray;
+			}
+			
+			.introdution {
+				margin: 1rem;
+				font-size: 14px;
+				color: gray;
+			}
+		</style>
+	</head>
+
+	<body ontouchstart>
+		<div id="about_us_page">
+			<!--帮助-->
+			<div class="help">
+				<p class="title">一、帮助：</p>
+				<p class="content">“享回收”资源回收系统基于微信公众号开发，本系统完全由“考试全队”独立开发完成， 让您能随时随地完成搜索、浏览、资源回收等功能。
+				</p>
+
+			</div>
+
+			<!--产品介绍-->
+			<div class="introdution">
+				<p class="title">二、产品介绍：</p>
+				<p class="content">
+					<p>1、分类及价格：资源分类及资源价格参考目前市场状况，经过综合考虑分析所得；</p>
+					<p>2、搜索：用户可以在搜索框内搜索到相关资源的详细信息；</p>
+					<p>3、订单：用户可以随时管理订单（增删改查）；</p>
+					<p>4、我的：用户可以在“我的”界面进行个人信息的管理。</p>
+				</p>
+			</div>
+
+			<!--footer-->
+			<div class="weui-footer">
+				<p class="weui-footer__links">
+					<a href="javascript:(0);" class="weui-footer__link">首页</a>
+				</p>
+				<p class="weui-footer__text">Copyright © 2018-2028 考试全队</p>
+			</div>
+		</div>
+
+		<script src="../resource/js/jquery.min.js"></script>
+		<script src="../resource/js/jquery-weui.min.js"></script>
+		<script>
+			/**
+			 * 
+			 * 点击“首页”链接，根据用户身份跳转到相应的首页
+			 * 
+			 */
+			$(".weui-footer__link").click(function() {
+				var identity = localStorage.identity;
+				if(1 == identity) { //用户
+					window.location.href = "user/index.html";
+				} else if(2 == identity) { //回收员
+					window.location.href = "collector/order.html";
+				} else {
+					$.toast("未登录", "forbidden"); //提示
+					window.location.href = "login.html";
+				}
+			});
+		</script>
+	</body>
+
+</html>

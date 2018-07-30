@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1, user-scalable=no">
+		<title>我的</title>
+		<link rel="stylesheet" href="../../resource/css/weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/jquery-weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../../resource/css/index.css" />
+		<script src="../../resource/js/jquery.min.js"></script>
+		<script src="../../resource/js/jquery-weui.min.js"></script>
+		<script type="text/javascript" src="../../resource/js/my-weixin.js"/>
+		<script>
+			/**
+			 * 
+			 * 获取缓存中的回收员个人信息
+			 * 
+			 */
+			$(function() {
+				var storage = window.localStorage;
+				var sellername = storage["name"];
+				var sellerbalance = storage["balance"];
+				var sellerlevel = storage["level"];
+				var sellerphone = storage["phone"];
+				//添加用户的地址显示
+				var addressarea = storage["selleraddressarea"];
+				var addressdetail = storage["selleraddressdetail"];
+				if("" != sellername) {
+					$("#sellername").text(sellername); //回收员姓名
+				}
+				if("" != sellerbalance) {
+					$("#sellerbalance").text(sellerbalance); //回收员金额
+				}
+				if("" != sellerlevel) {
+					$("#sellerlevel").text("lv " + sellerlevel); //回收员等级
+				}
+				if("" != sellerphone) {
+					$("#sellerphone").text(sellerphone); //回收员联系方式
+				}
+			});
+		</script>
+	</head>
+
+	<body ontouchstart>
+		<div class="weui-tab">
+			<!--主体页面-->
+			<div class="weui-tab__bd">
+
+				<!--我的-->
+				<div id="tab3" class="weui-tab__bd-item weui-tab__bd-item--active">
+					<div id="tab3_body">
+						<!--头像-->
+						<div class="headPortrait">
+							<img src="../../resource/images/test_user_headPortrait.png" />
+						</div>
+
+						<!--昵称-->
+						<div class="nickname">
+							<span id="sellername">无</span>
+						</div>
+
+						<!--列表1：我的订单、我的地址、我的钱包、我的等级、联系方式-->
+						<div class="weui-cells">
+							<a class="weui-cell weui-cell_access" href="order.html">
+								<div class="weui-cell__hd">
+									<i class="fa fa-lightbulb-o"></i>
+								</div>
+								<div class="weui-cell__bd">
+									<p>
+										&nbsp;&nbsp;我的订单
+									</p>
+								</div>
+								<div class="weui-cell__ft"></div>
+							</a>
+							<a class="weui-cell weui-cell_access" href="javascript:(0);" id="toaddressmanage">
+								<div class="weui-cell__hd">
+									<i class="fa fa-map-marker"></i>
+								</div>
+								<div class="weui-cell__bd">
+									<p>
+										&nbsp;&nbsp;我的地址
+									</p>
+								</div>
+								<div class="weui-cell__ft"></div>
+							</a>
+							<a class="weui-cell weui-cell_access" href="walletdetail.html">
+								<div class="weui-cell__hd">
+									<i class="fa fa-yen"></i>
+								</div>
+								<div class="weui-cell__bd">
+									<p>
+										&nbsp;&nbsp;我的钱包
+									</p>
+								</div>
+								<div class="weui-cell__ft" id="sellerbalance">
+									0
+								</div>
+							</a>
+							<a class="weui-cell weui-cell_access" href="javascript:(0);">
+								<div class="weui-cell__hd">
+									<i class="fa fa-thermometer-three-quarters"></i>
+								</div>
+								<div class="weui-cell__bd">
+									<p>
+										&nbsp;&nbsp;我的等级
+									</p>
+								</div>
+								<div class="weui-cell__ft" id="sellerlevel">
+									lv0
+								</div>
+							</a>
+							<a class="weui-cell weui-cell_access" href="../modifyphonenumber.html">
+								<div class="weui-cell__hd">
+									<i class="fa fa-phone"></i>
+								</div>
+								<div class="weui-cell__bd">
+									<p>
+										&nbsp;&nbsp;联系方式
+									</p>
+								</div>
+								<div class="weui-cell__ft" id="sellerphone">
+									无
+								</div>
+							</a>
+						</div>
+
+						<!--列表2：修改密码、关于我们-->
+						<div class="weui-cells">
+							<a class="weui-cell weui-cell_access" href="../modifypassword.html">
+								<div class="weui-cell__hd">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="weui-cell__bd">
+									<p>
+										&nbsp;&nbsp;修改密码
+									</p>
+								</div>
+								<div class="weui-cell__ft"></div>
+							</a>
+							<a class="weui-cell weui-cell_access" href="../aboutus.html">
+								<div class="weui-cell__hd">
+									<i class="fa fa-address-book-o"></i>
+								</div>
+								<div class="weui-cell__bd">
+									<p>
+										&nbsp;&nbsp;关于我们
+									</p>
+								</div>
+								<div class="weui-cell__ft"></div>
+							</a>
+						</div>
+
+						<!--分隔块-->
+						<div class="separate"></div>
+
+						<!--退出按钮-->
+						<a href="javascript:;" class="weui-btn weui-btn_disabled weui-btn_warn" onclick="exit()">
+							退出登录
+						</a>
+					</div>
+
+					<!--分隔退出按钮和底部导航条-->
+					<br />
+					<!--规避下方内容被导航条覆盖-->
+					<div class="h50"></div>
+				</div>
+			</div>
+
+			<!--添加订单悬浮按钮-->
+			<a href="orderadd.html" class="suspendAddButton"></a>
+
+			<!--底部导航栏-->
+			<div class="weui-tabbar">
+				<a href="index.html" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img src="../../resource/images/icon_nav_button.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">
+						首页
+					</p>
+				</a>
+				<a href="order.html" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img src="../../resource/images/icon_nav_article.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">
+						订单
+					</p>
+				</a>
+				<a href="self.html" class="weui-tabbar__item weui-bar__item--on">
+					<div class="weui-tabbar__icon">
+						<img src="../../resource/images/icon_nav_cell.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">
+						我的
+					</p>
+				</a>
+			</div>
+		</div>
+		<script src="../../resource/js/fastclick.js"></script>
+		<script>
+			$(function() {
+				window.path=getContextPath();
+				FastClick.attach(document.body);
+			});
+
+			function exit() {
+//				$.alert("退出功能暂时关闭", "提醒！");
+				$.confirm("您确定要退出吗?", "确认退出?", function() {
+		        	$.toast("退出成功!");
+		        	localStorage.clear();
+		        	window.location.href="../login.html";
+		        }, function() {
+		          //取消操作
+		        });
+			}
+			
+			/**
+			 * 当通过“我的”进入地址管理时，设置localStorage.authaddressmanage值为1
+			 * 当通过“添加订单”进入地址管理时，设置localStorage.authaddressmanage值为0
+			 */
+			$("#toaddressmanage").click(function(){
+				localStorage.authaddressmanage = 1;
+				window.location.href = "addressmanage.html";
+			});
+		</script>
+	</body>
+
+</html>

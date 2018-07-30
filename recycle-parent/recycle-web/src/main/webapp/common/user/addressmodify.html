@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>编辑地址</title>
+		<link rel="stylesheet" href="../../resource/css/weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/jquery-weui.min.css" />
+		<script src="../../resource/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../resource/js/my-weixin.js"></script>
+		<script>
+			/**
+			 * 若缓存中有地址，则从缓存中获取地址，做修改地址操作
+			 * 做添加地址操作，并将新添加的地址存入缓存
+			 */
+			$(function() {
+				window.path=getContextPath();
+				if(undefined != localStorage.selleraddressarea && null != localStorage.selleraddressarea && undefined != localStorage.selleraddressdetail && null != localStorage.selleraddressdetail) {
+					$("input[name = selleraddressarea]").attr("value", localStorage.selleraddressarea);
+					$("textarea[name = selleraddressdetail]").append(localStorage.selleraddressdetail);
+				}
+
+				$("input[name = sellerName]").attr("value", localStorage.name);
+				$("input[name = sellerPhone]").attr("value", localStorage.phone);
+			});
+		</script>
+	</head>
+
+	<body ontouchstart>
+		<form action="" id="addressForm">
+			<div class="weui-cells weui-cells_form">
+				<!--姓名-->
+				<div class="weui-cell">
+					<div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" type="text" placeholder="张三" name="sellerName"  readonly="readonly">
+					</div>
+				</div>
+				<!--联系电话-->
+				<div class="weui-cell">
+					<div class="weui-cell__hd"><label class="weui-label">联系电话</label></div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" type="number" pattern="[0-9]*" placeholder="13454646885" name="sellerPhone"  readonly="readonly">
+					</div>
+				</div>
+				<!--联系地址-->
+				<div class="weui-cell">
+					<div class="weui-cell__hd"><label class="weui-label">联系地址</label></div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" type="text" id="city-picker" placeholder="浙江 杭州 拱墅区" name="selleraddressarea">
+					</div>
+				</div>
+				<div class="weui-cell">
+					<div class="weui-cell__bd">
+						<textarea class="weui-textarea" placeholder="请输入你的详细地址，如：杨桥大道梨园小区8栋1号" rows="3" name="selleraddressdetail"></textarea>
+						<div class="weui-textarea-counter"><span>0</span>/50</div>
+					</div>
+				</div>
+				<!--提交按钮-->
+				<a href="##" class="weui-btn weui-btn_primary" onclick="check()">保存新地址</a>
+			</div>
+		</form>
+		<script src="../../resource/js/jquery-weui.min.js"></script>
+		<script src="../../resource/js/city-picker.min.js"></script>
+		<script>
+			$("#city-picker").cityPicker({
+				title: "请选择我的地址"
+			});
+
+			/**
+			 * 保存新地址
+			 */
+			function check() {
+				//$('form').submit();
+				var d = {};
+				var r = $('form').serializeArray();
+				//逐个遍历数组对象
+				$.each(r, function() {
+					if(this.value == "" || this.value == null) {
+						d[this.name] = this.placeholder;
+					}
+					d[this.name] = this.value;
+				});
+				var newAddress = JSON.stringify(d);
+
+				/**
+				 * 根据缓存中是否有用户地址信息判断应该添加地址还是修改地址
+				 */
+				if("" == localStorage.selleraddressarea){
+					var selleraddressarea = $("input[name = selleraddressarea]").val();
+					var selleraddressdetailed = $("textarea[name = selleraddressdetail]").val();
+					var data = {
+						"addressarea": selleraddressarea,
+						"addressdetailed": selleraddressdetailed,
+						"addressname": localStorage.name,
+						"addressphone": localStorage.phone,
+						"selleraccount":localStorage.account
+					};
+					var data = JSON.stringify(data);
+					console.log(data);
+					$.ajax({
+						type: "POST",
+						dataType: "json",
+						contentType: "application/json;charset=utf-8",
+						async: true,
+						url: "/"+path+"/"+"address/addAddress",
+						data: data,
+						success: function(result) {
+							//将地址存入缓存
+							var message = result.msg;
+							if(message == 'success'){
+								localStorage.selleraddressarea = selleraddressarea;
+								localStorage.selleraddressdetail = selleraddressdetailed;
+								$.toast("添加成功");
+								if(localStorage.authaddressmanage == 0){
+									console.log('需要到订单界面');
+									window.location.href='orderadd.html';	
+								}else if(localStorage.authaddressmanage == 1){
+									//location.href="self.html";
+									window.location.href="self.html";
+									console.log('需要到self界面');
+								}
+							}
+						},
+						error: function() {
+							$.toast("操作失败", "forbidden"); //提示操作失败
+						}
+					});
+				}else{
+					$.ajax({
+						type: "POST",
+						dataType: "json",
+						contentType: "application/json;charset=utf-8",
+						async: true,
+						url: "/"+path+"/"+"address/updateAddress?id=" + localStorage.id,
+						data: newAddress,
+						success: function(result) {
+							if(result.msg == "success") {
+								//将地址存入缓存
+								localStorage.selleraddressarea = $("input[name = selleraddressarea]").val();
+								localStorage.selleraddressdetail = $("textarea[name = selleraddressdetail]").val();
+								$.toast("修改成功");
+								if(localStorage.authaddressmanage == 0){
+										console.log('需要到订单界面');
+										window.location.href='orderadd.html';	
+								}else if(localStorage.authaddressmanage == 1){
+										window.location.href="self.html";
+										//window.history.back(-3);
+										console.log('需要到self界面');
+								}
+							}
+
+						},
+						error: function() {
+							$.toast("修改失败", "forbidden"); //提示操作失败
+						}
+					});
+				
+				}
+				
+			}
+		</script>
+	</body>
+
+</html>

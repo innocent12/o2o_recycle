@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"    
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"    
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee     
+    http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">  
+      
+    <!-- 过滤器防止统一编码 -->  
+<!-- 	  <filter>  
+	    <filter-name>encodingFilter</filter-name>  
+	    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>  
+	    <init-param>  
+	      <param-name>encoding</param-name>  
+	      <param-value>UTF-8</param-value>  
+	    </init-param>  
+	    <init-param>  
+	      <param-name>forceEncoding</param-name>  
+	      <param-value>true</param-value>  
+	    </init-param>  
+	  </filter>  
+	  <filter-mapping>  
+	    <filter-name>encodingFilter</filter-name>  
+	    <url-pattern>/*</url-pattern>  
+	</filter-mapping> -->
+      
+   <!-- ajax跨域过滤器 -->
+  <!--  <filter>
+   		<filter-name>corsFilter</filter-name>
+   		<filter-class>com.fuchuang.lanou.filter.myCORSFilter</filter-class>
+   </filter>
+   <filter-mapping>
+   		<filter-name>corsFilter</filter-name>
+   		<url-pattern>/*</url-pattern>
+   </filter-mapping> -->
+      
+    <!-- 配置REST风格的URL,配置过滤器 -->  
+<!--     <filter>  
+        <filter-name>HiddenHttpMethodFilter</filter-name>  
+        <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>  
+    </filter>  
+    <filter-mapping>  
+        <filter-name>HiddenHttpMethodFilter</filter-name>  
+        <url-pattern>/*</url-pattern>  
+    </filter-mapping>  
+     -->
+       <!-- 在ajax中，type类型为PUT或者DELETE时，可以直接发送 -->  
+<!--     <filter>  
+        <filter-name>HttpPutFormContentFilter</filter-name>  
+        <filter-class>org.springframework.web.filter.HttpPutFormContentFilter</filter-class>  
+    </filter>  
+    <filter-mapping>  
+        <filter-name>HttpPutFormContentFilter</filter-name>  
+        <url-pattern>/*</url-pattern>  
+    </filter-mapping>  --> 
+    
+    <!-- springmvc控制器 -->  
+	  <servlet>  
+	    <servlet-name>springMVC</servlet-name>  
+	    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>  
+		<init-param>  
+	      <param-name>contextConfigLocation</param-name>  
+	      <param-value>classpath:spring-mvc.xml</param-value>  
+	    </init-param>
+	    <load-on-startup>1</load-on-startup>  
+	  </servlet>  
+      
+     <!-- springmvc控制器映射 -->  
+	  <servlet-mapping>  
+	    <servlet-name>springMVC</servlet-name>  
+	    <url-pattern>/</url-pattern>  
+	  </servlet-mapping>  
+	  <welcome-file-list>  
+	    <welcome-file>index.jsp</welcome-file>  
+	  </welcome-file-list>
+      
+	<!-- <servlet>
+      	<servlet-name>coreServlet</servlet-name>
+      	<servlet-class>
+      	web.servlet.CoreServlet
+      	</servlet-class>
+      </servlet>
+ 	<servlet-mapping>
+ 		<servlet-name>coreServlet</servlet-name>
+ 		<url-pattern>/CoreServlet</url-pattern>
+ 	</servlet-mapping> -->
+      
+</web-app>  

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>我的地址</title>
+		<link rel="stylesheet" href="../../resource/css/weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/jquery-weui.min.css" />
+		<style>
+			.separate {
+				height: 1rem;
+			}
+		</style>
+
+		<script src="../../resource/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../resource/js/my-weixin.js"></script>
+		<script>
+			/**
+			 * 若用户已经有地址，从缓存中获取用户信息
+			 * 否则不作任何操做
+			 */
+			$(function() {
+				window.path=getContextPath();
+				$("#sellername").text(localStorage.name);
+				$("#sellerphone").text(localStorage.phone);
+				if(undefined != localStorage.selleraddressarea && "" != localStorage.selleraddressarea) {
+					$("#selleraddress").text(localStorage.selleraddressarea + "" + localStorage.selleraddressdetail);
+				}
+			});
+		</script>
+	</head>
+
+	<body ontouchstart>
+		<div id="address_manage_page">
+			<!--列表项-->
+			<div class="weui-form-preview">
+				<div class="weui-form-preview__hd">
+					<label class="weui-form-preview__label">姓名</label>
+					<em class="weui-form-preview__value" id="sellername">无</em>
+				</div>
+				<div class="weui-form-preview__bd">
+					<div class="weui-form-preview__item">
+						<label class="weui-form-preview__label">联系电话</label>
+						<span class="weui-form-preview__value" id="sellerphone">无</span>
+					</div>
+					<div class="weui-form-preview__item">
+						<label class="weui-form-preview__label">联系地址</label>
+						<span class="weui-form-preview__value" id="selleraddress">无</span>
+					</div>
+				</div>
+				<div class="weui-form-preview__ft" id="addressId2">
+					<button class="weui-form-preview__btn weui-form-preview__btn_primary" name="edit" onclick="tomodifyaddress()">编辑</button>
+				</div>
+			</div>
+		</div>
+		<script src="../../resource/js/jquery-weui.min.js"></script>
+		<script>
+			if(1 == localStorage.authaddressmanage){  //当从“我的”来到本页面时，返回至“我的”
+				window.history.replaceState(null, null, "self.html");
+			}else if(0 == localStorage.authaddressmanage){  //当从“添加订单”来到本页面时，返回至“添加订单”
+				window.history.replaceState(null, null, "orderadd.html");
+			}else {
+				$.toast("非正常跳转", "forbidden"); //提示非正当来源
+				window.location.href="../login.html";
+			}
+		
+			function tomodifyaddress() {
+				window.location.href = "addressmodify.html";
+			}
+
+			//			$('button').click(function(e){
+			//				var address_id = $(e.target).parent().attr('id');
+			//				var name = $(e.target).attr('name');
+			//				
+			//				console.log(address_id+"name:");
+			//				//如果为编辑则跳转界面
+			//				if(name=='edit'){
+			//					window.location.href='addressmodify.html';
+			//				}else if(name=='set_default'){//设置为默认
+			//					var type = '1';
+			//				//获取用户账号	
+			//					var str = localStorage.getItem('seller');
+			//					//解析为json格式
+			//					var account = JSON.parse(str)['account'];
+			//					//提交请求
+			//					$.ajax({
+			//						type:'POST',
+			//						dataType:'json',
+			//						url:'/Lan_ou/address/updateSellerAddress',
+			//						contentType:'application/json;charset=utf-8',
+			//						async:true,
+			//						data:{'addressId':address_id,
+			//							'addressType':type,
+			//							'sellerAccount':account},
+			//						success:function(result){
+			//							console.log(result);
+			//							window.location.href='';
+			//						},
+			//						error:function(){
+			//							$.toast("操作失败", "forbidden"); //提示操作失败
+			//							location.reload(true);
+			//						}
+			//					});
+			//				}
+			//			});
+		</script>
+	</body>
+
+</html>

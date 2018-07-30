@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1, user-scalable=no">
+		<title>订单</title>
+		<link rel="stylesheet" href="../../resource/css/weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/jquery-weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/index.css" />
+		<script src="../../resource/js/jquery.min.js"></script>
+		<script src="../../resource/js/jquery-weui.min.js"></script>
+		<script src="../../resource/js/my-weixin.js"></script>
+		<script>
+			var code = getQueryString('code');
+			OpenidLogin(code);
+			window.path=getContextPath();
+			if(localStorage['identity'] == 2){
+				alert('亲，您是回收员,可以去收货哦');
+				window.location.href = "/"+path+"/"+"common/collector/order.html";
+			}
+			$(function() {
+				$.showLoading("数据加载中");
+				var storage = window.localStorage;
+				var account = storage["account"]; //获取回收员账号
+				var data = { //设置数据源
+					"account": account
+				}
+				$.ajax({
+					type: "post",
+					url: "/"+path+"/"+"orderInfo/selectOrderinfoBySelleraccount?account="+account,
+					async: true,
+					contentType: 'application/json;charset=utf-8',
+					dataType: "json", //设置需要返回的数据类型
+					data: {},
+					success: function(data) { //登陆成功后的处理
+						$.hideLoading();
+						console.log(data);
+						insertorder(data);
+					},
+					error: function() {
+						$.toast("加载失败", "forbidden"); //提示操作失败
+					}
+				});
+			});
+
+			function insertorder(data) {
+				var tab2_body = $("#tab2");
+				var statusone = $("#stautsone");
+				var statustwo = $("#stautstwo");
+				var statusthree = $("#stautsthree");
+				var statusfour = $("#stautsfour");
+				var statuszero = $("#stautszero");
+				
+				var con = ""; //存储页面内容
+				var status = ""; //存储交易状态（未接单、已接单、交易完成）
+				//data = JSON.parse(data); //将传过来的json数据进行解析
+				//遍历json数据
+				$.each(data, function(index, content) {
+					con += '<!--单个订单信息--> <div class = "weui-form-preview" ><div class = "weui-form-preview__hd" ><label class = "weui-form-preview__label" >订单状态</label><em class="weui-form-preview__value"> ';
+					var flag =0;
+					if(content.orderstate == 1) { //未接单
+						con += '未接单';
+						flag=1;
+					} else if(content.orderstate == 2) { //已接单
+						con += '已接单';
+						flag=1;
+					} else if(content.orderstate == 3) { //待评价
+						con += '待评价';
+					} else if(content.orderstate == 4) { //交易完成
+						con += '交易完成';
+					} else { //订单已取消  content.status == 0
+						con += '已取消';
+						flag=2;
+					}
+
+					con += '</em></div><div class="weui-form-preview__bd"><div class="weui-form-preview__item"><label class="weui-form-preview__label">回收员</label><span class="weui-form-preview__value">' + content.collectoraccount;
+					con += '</span></div><div class="weui-form-preview__item"><label class="weui-form-preview__label">订单编号</label><span class="weui-form-preview__value">' + content.orderid;
+					con += '</span></div><div class="weui-form-preview__item"><label class="weui-form-preview__label">发起时间</label><span class="weui-form-preview__value">' + content.orderplacetime;
+					con += '</span></div></div><div class="weui-form-preview__ft" id="'+ content.orderid +'">';
+
+					if(content.orderstate == 1) { //未接单
+						con += '<button class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:;"  name="cancel">取消订单</button>';
+					}  else if(content.orderstate == 2) { //已接单
+						con += '<button class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:;"  name="cancel">取消订单</button>';
+					}  else if(content.orderstate == 3) { //待评价
+						con += '<button class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:;"  name="confirm">确认订单</button>';
+					}  else if(content.orderstate == 4) { //交易完成
+						con += '<button class="weui-form-preview__btn weui-form-preview__btn_primary " href="javascript: " name="estimate">我要评价</button>';
+					} else { //订单已取消  content.status == 0
+						con += '<a class="weui-form-preview__btn weui-form-preview__btn_default " href="javascript: " name="rePub">重新发布</a>';
+					}
+
+					con += '<button class="weui-form-preview__btn weui-form-preview__btn_primary " href="javascript:; "  name="lookup">查看详情</button></div></div><!--分隔块--><div class="separate "></div>';
+					/*
+					if(content.orderstate == 1) { //未接单
+						statusone.html(con);
+					}  else if(content.orderstate == 2) { //已接单
+						statustwo.html(con);
+					}  else if(content.orderstate == 3) { //待评价
+						statusthree.html(con);
+					}  else if(content.orderstate == 4) { //交易完成
+						statusfour.html(con);
+					} else { //订单已取消  content.status == 0
+						statuszero.html(con);
+					}
+					*/
+					tab2_body.html(con);
+					
+					if(flag == 1){
+						$('#issueOrder').text('添加货物');
+					}else if(flag == 2){
+						$('#issueOrder').text('激活订单');
+					}
+				});
+			}
+		</script>
+	</head>
+
+	<body ontouchstart>
+		<div class="weui-tab">
+			<!--主体页面-->
+			<div class="weui-tab__bd">
+
+				<!--订单-->
+				<div id="tab2" class="weui-tab__bd-item weui-tab__bd-item--active">
+					<!--订单页面内容-->
+					<div id="tab2_body">
+						<!--发布按钮-->
+						<a class="weui-btn weui-btn_plain-primary" id="issueOrder" >
+							发布订单
+						</a>
+						
+						<!--分隔按钮和订单信息-->
+						<br />
+						
+						<div id="stautsone"></div>
+						<div id="stautstwo"></div>
+						<div id="stautsthree"></div>
+						<div id="stautsfour"></div>
+						<div id="stautszero"></div>
+						
+						
+					</div>
+
+					<!--底部提示-->
+					<div class="weui-loadmore weui-loadmore_line">
+						<span class="weui-loadmore__tips">嘿，我可是有底线的哦</span>
+					</div>
+
+					<!--规避下方内容被导航条覆盖-->
+					<div class="h50"></div>
+				</div>
+
+			</div>
+
+			<!--添加订单悬浮按钮-->
+			<a href="orderadd.html" class="suspendAddButton"></a>
+
+			<!--底部导航栏-->
+			<div class="weui-tabbar">
+				<a href="index.html" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img src="../../resource/images/icon_nav_button.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">
+						首页
+					</p>
+				</a>
+				<a href="order.html" class="weui-tabbar__item weui-bar__item--on">
+					<div class="weui-tabbar__icon">
+						<img src="../../resource/images/icon_nav_article.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">
+						订单
+					</p>
+				</a>
+				<a href="self.html" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img src="../../resource/images/icon_nav_cell.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">
+						我的
+					</p>
+				</a>
+			</div>
+		</div>
+		<script src="../../resource/js/fastclick.js"></script>
+		<script>
+			$(function() {
+				FastClick.attach(document.body);
+			});
+			
+			$(document).on('click','#issueOrder',function(){
+				var account = localStorage.account;
+				var timestamp = Date.parse(new Date());
+				var area = localStorage.selleraddressarea;
+				if(area == ""){
+					$.toast('您的地址信息没有完善','cancel');
+					return;
+				}
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					url: "/"+path+"/"+"orderInfo/addOrderinfo?selleraccount=" + account + "&timestamp=" + timestamp+"&area="+area ,
+					contentType: 'application/json;charset=utf-8',
+					async: true,
+					data: {},
+					success: function(result) {
+						console.log(result['Msg']);
+						if(result['Msg'] == "success") {
+							var orderid = result['orderid'];
+							var orderamount = result['orderamount'];
+							window.location.href = "orderadd.html?orderid=" + orderid+"&amount="+orderamount;
+						} else {
+							window.location.href = '../error.html';
+						}
+						//localStorage.setItem("order2",JSON.stringify(result));
+					},
+					error: function(result) {
+						console.log('fail' + JSON.stringify(result));
+						$.toast('您当前地址所在区域没有回收员，请更换地址');
+					}
+				});
+			});
+			
+			
+			$(document).on('click','button',function(e){
+				var orderId = $(e.target).parent().attr('id');
+				var name = $(e.target).attr('name');
+				var data = {
+					"orderid":orderId
+				};
+				data = JSON.stringify(data);
+				if(name == "lookup") {
+					window.location.href = "../orderdetail.html?orderid="+orderId;
+					/* $.ajax({
+						type: 'POST',
+						dataType: 'json',
+						url: "/"+path+"/"+'orderInfo/selectOrderinfoDetailByorderid',
+						contentType: 'application/json;charset=utf-8',
+						async: true,
+						data: data,
+						success: function(result) {
+							console.log(result);
+							localStorage.setItem("order2", JSON.stringify(result));
+							
+						},
+						error: function(result) {
+							console.log('fail' + JSON.stringify(result));
+							$.toast("加载失败", "forbidden"); //提示操作失败
+						}
+					}); */
+				} else if(name == "estimate") {
+					//var id = localStorage.id;
+					window.location.href = "estimate.html?orderid=" + orderId;
+				} else if(name == "cancel") {
+					alert('确认取消订单？');
+					//window.location.href = "http://ksqdwechat.duapp.com/orderInfo/finishOrder?orderid=" + orderId;
+					//$.toast("取消成功");
+					$.get("/"+path+"/"+"orderInfo/finishOrder?orderid=" + orderId,function(data,status){
+						
+					})
+					location.reload();
+				}
+			});
+		</script>
+	</body>
+
+</html>

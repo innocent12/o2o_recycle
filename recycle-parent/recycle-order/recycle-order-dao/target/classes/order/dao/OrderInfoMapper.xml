@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.dao.OrderInfoMapper" >
+  <resultMap id="BaseResultMap" type="order.pojo.OrderInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="orderId" property="orderid" jdbcType="VARCHAR" />
+    <result column="sellerAccount" property="selleraccount" jdbcType="VARCHAR" />
+    <result column="collectorAccount" property="collectoraccount" jdbcType="VARCHAR" />
+    <result column="orderAmount" property="orderamount" jdbcType="DOUBLE" />
+    <result column="orderState" property="orderstate" jdbcType="INTEGER" />
+    <result column="orderPlaceTime" property="orderplacetime" jdbcType="TIMESTAMP" />
+    <result column="orderFinishTime" property="orderfinishtime" jdbcType="TIMESTAMP" />
+    <result column="sellerLevel" property="sellerlevel" jdbcType="VARCHAR" />
+    <result column="sellerMessage" property="sellermessage" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, orderId, sellerAccount, collectorAccount, orderAmount, orderState, orderPlaceTime, 
+    orderFinishTime, sellerLevel, sellerMessage
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="order.pojo.OrderInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from orderinfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from orderinfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from orderinfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="order.pojo.OrderInfoExample" >
+    delete from orderinfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="order.pojo.OrderInfo" >
+    insert into orderinfo (id, orderId, sellerAccount, 
+      collectorAccount, orderAmount, orderState, 
+      orderPlaceTime, orderFinishTime, sellerLevel, 
+      sellerMessage)
+    values (#{id,jdbcType=INTEGER}, #{orderid,jdbcType=VARCHAR}, #{selleraccount,jdbcType=VARCHAR}, 
+      #{collectoraccount,jdbcType=VARCHAR}, #{orderamount,jdbcType=DOUBLE}, #{orderstate,jdbcType=INTEGER}, 
+      #{orderplacetime,jdbcType=TIMESTAMP}, #{orderfinishtime,jdbcType=TIMESTAMP}, #{sellerlevel,jdbcType=VARCHAR}, 
+      #{sellermessage,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="order.pojo.OrderInfo" >
+    insert into orderinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderid != null" >
+        orderId,
+      </if>
+      <if test="selleraccount != null" >
+        sellerAccount,
+      </if>
+      <if test="collectoraccount != null" >
+        collectorAccount,
+      </if>
+      <if test="orderamount != null" >
+        orderAmount,
+      </if>
+      <if test="orderstate != null" >
+        orderState,
+      </if>
+      <if test="orderplacetime != null" >
+        orderPlaceTime,
+      </if>
+      <if test="orderfinishtime != null" >
+        orderFinishTime,
+      </if>
+      <if test="sellerlevel != null" >
+        sellerLevel,
+      </if>
+      <if test="sellermessage != null" >
+        sellerMessage,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderid != null" >
+        #{orderid,jdbcType=VARCHAR},
+      </if>
+      <if test="selleraccount != null" >
+        #{selleraccount,jdbcType=VARCHAR},
+      </if>
+      <if test="collectoraccount != null" >
+        #{collectoraccount,jdbcType=VARCHAR},
+      </if>
+      <if test="orderamount != null" >
+        #{orderamount,jdbcType=DOUBLE},
+      </if>
+      <if test="orderstate != null" >
+        #{orderstate,jdbcType=INTEGER},
+      </if>
+      <if test="orderplacetime != null" >
+        #{orderplacetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderfinishtime != null" >
+        #{orderfinishtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sellerlevel != null" >
+        #{sellerlevel,jdbcType=VARCHAR},
+      </if>
+      <if test="sellermessage != null" >
+        #{sellermessage,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="order.pojo.OrderInfoExample" resultType="java.lang.Integer" >
+    select count(*) from orderinfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update orderinfo
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.orderid != null" >
+        orderId = #{record.orderid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.selleraccount != null" >
+        sellerAccount = #{record.selleraccount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.collectoraccount != null" >
+        collectorAccount = #{record.collectoraccount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderamount != null" >
+        orderAmount = #{record.orderamount,jdbcType=DOUBLE},
+      </if>
+      <if test="record.orderstate != null" >
+        orderState = #{record.orderstate,jdbcType=INTEGER},
+      </if>
+      <if test="record.orderplacetime != null" >
+        orderPlaceTime = #{record.orderplacetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.orderfinishtime != null" >
+        orderFinishTime = #{record.orderfinishtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.sellerlevel != null" >
+        sellerLevel = #{record.sellerlevel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sellermessage != null" >
+        sellerMessage = #{record.sellermessage,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update orderinfo
+    set id = #{record.id,jdbcType=INTEGER},
+      orderId = #{record.orderid,jdbcType=VARCHAR},
+      sellerAccount = #{record.selleraccount,jdbcType=VARCHAR},
+      collectorAccount = #{record.collectoraccount,jdbcType=VARCHAR},
+      orderAmount = #{record.orderamount,jdbcType=DOUBLE},
+      orderState = #{record.orderstate,jdbcType=INTEGER},
+      orderPlaceTime = #{record.orderplacetime,jdbcType=TIMESTAMP},
+      orderFinishTime = #{record.orderfinishtime,jdbcType=TIMESTAMP},
+      sellerLevel = #{record.sellerlevel,jdbcType=VARCHAR},
+      sellerMessage = #{record.sellermessage,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="order.pojo.OrderInfo" >
+    update orderinfo
+    <set >
+      <if test="orderid != null" >
+        orderId = #{orderid,jdbcType=VARCHAR},
+      </if>
+      <if test="selleraccount != null" >
+        sellerAccount = #{selleraccount,jdbcType=VARCHAR},
+      </if>
+      <if test="collectoraccount != null" >
+        collectorAccount = #{collectoraccount,jdbcType=VARCHAR},
+      </if>
+      <if test="orderamount != null" >
+        orderAmount = #{orderamount,jdbcType=DOUBLE},
+      </if>
+      <if test="orderstate != null" >
+        orderState = #{orderstate,jdbcType=INTEGER},
+      </if>
+      <if test="orderplacetime != null" >
+        orderPlaceTime = #{orderplacetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderfinishtime != null" >
+        orderFinishTime = #{orderfinishtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sellerlevel != null" >
+        sellerLevel = #{sellerlevel,jdbcType=VARCHAR},
+      </if>
+      <if test="sellermessage != null" >
+        sellerMessage = #{sellermessage,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="order.pojo.OrderInfo" >
+    update orderinfo
+    set orderId = #{orderid,jdbcType=VARCHAR},
+      sellerAccount = #{selleraccount,jdbcType=VARCHAR},
+      collectorAccount = #{collectoraccount,jdbcType=VARCHAR},
+      orderAmount = #{orderamount,jdbcType=DOUBLE},
+      orderState = #{orderstate,jdbcType=INTEGER},
+      orderPlaceTime = #{orderplacetime,jdbcType=TIMESTAMP},
+      orderFinishTime = #{orderfinishtime,jdbcType=TIMESTAMP},
+      sellerLevel = #{sellerlevel,jdbcType=VARCHAR},
+      sellerMessage = #{sellermessage,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectResByOrderId" parameterType="String" resultType="order.vo.OrderResource">
+  	SELECT resourceAmount,resource_records.resourceName,resourcePicture,resourceType
+	FROM resource_records 
+	INNER JOIN resource_category 
+	ON resource_category.resourceId=resource_records.resourceId 
+	AND resource_records.resourceId IN
+	(SELECT resource_records.resourceId FROM resource_records WHERE orderId=#{_parameter})
+  </select>
+  <select id="selectOrderListByArea" resultType="order.vo.VisualOrderInfo">
+  	SELECT orderinfo.orderId,orderAmount,addressArea,addressDetailed,seller.sellerPhone,orderPlaceTime,orderFinishTime,orderState,sellerMessage,seller.sellerAccount 
+  	FROM (address 
+	INNER JOIN seller_address 
+	ON address.addressId=seller_address.addressId )
+	INNER JOIN seller 
+	INNER JOIN orderinfo
+	ON seller.sellerAccount=seller_address.sellerAccount 
+	AND seller.sellerAccount=orderinfo.sellerAccount 
+	AND address.addressArea=#{addressArea}
+	AND orderinfo.collectorAccount=#{ca_Account}
+  </select>
+  <select id="selectTheOrderByOrderidAndSeller" resultType="order.vo.VisualOrderInfo">
+  	SELECT orderinfo.orderId,orderAmount,addressArea,addressDetailed,seller.sellerPhone,orderPlaceTime,orderFinishTime,orderState,sellerMessage,seller.sellerAccount,sellerName 
+  	FROM (address 
+	INNER JOIN seller_address 
+	ON address.addressId=seller_address.addressId )
+	INNER JOIN seller 
+	INNER JOIN orderinfo
+	ON seller.sellerAccount=seller_address.sellerAccount 
+	AND seller.sellerAccount=orderinfo.sellerAccount 
+	AND address.addressArea=#{addressArea}
+	AND orderinfo.sellerAccount=#{sellerAccount}
+  	AND orderinfo.orderId=#{orderId}
+  </select>
+</mapper>

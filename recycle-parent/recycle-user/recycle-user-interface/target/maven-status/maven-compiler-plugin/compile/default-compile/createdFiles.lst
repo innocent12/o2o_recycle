@@ -1,0 +1,6 @@
+user\service\AdminlogService.class
+user\service\AdminService.class
+user\service\AddressService.class
+user\service\SellerService.class
+user\service\SellerAddressService.class
+user\service\CollectorService.class

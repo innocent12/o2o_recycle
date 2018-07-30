@@ -1,0 +1,41 @@
+回收员查询：select * form where orderinfo.orderid=# and orderinfo.collector =#
+
+通过orderinfo.orderid查找resourceid,通过resourceid查找resourceName,
+以下：
+SELECT resourceAmount,resource_records.resourceName,resourcePicture,resourceType
+FROM resource_records 
+INNER JOIN resource_category 
+ON resource_category.resourceId=resource_records.resourceId 
+AND resource_records.resourceId IN
+(SELECT resource_records.resourceId FROM resource_records WHERE orderId="111")
+
+通过卖家账号获取，卖家信息
+seller_account,seller_name,seller_phone,selleraddressarea,selleraddressDetail
+以下：
+SELECT addressArea,addressDetailed,seller.sellerAccount,sellerName,sellerPhone FROM (address 
+INNER JOIN seller_address 
+ON seller_address.addressId=address.addressId)
+INNER JOIN seller ON seller.sellerAccount=seller_address.sellerAccount 
+AND seller_address.sellerAccount=#{_parameter}
+
+sql3，回收员查询获取全部订单信息
+需要获取订单信息，获取居民信息，居民地址
+SELECT orderinfo.orderId,orderAmount,addressArea,addressDetailed,seller.sellerPhone,orderPlaceTime,orderFinishTime,orderState,sellerMessage 
+  	FROM (address 
+	INNER JOIN seller_address 
+	ON address.addressId=seller_address.addressId )
+	INNER JOIN seller 
+	INNER JOIN orderinfo
+	ON seller.sellerAccount=seller_address.sellerAccount 
+	AND seller.sellerAccount=orderinfo.sellerAccount 
+	AND address.addressArea="北京 北京市 东城区"
+	AND orderinfo.collectorAccount="lotest1"
+
+回收员获取全部简要订单信息
+需要addressArea,addressDetail,orderAmount,orderSate,
+reousrceid,resourceAmount vo 拼写错误,orderPlaceTime,orderfinishTime,sellerMessage
+
+还需要sellerName
+
+查询用户详细信息seller,sellerAddress,address三个表
+

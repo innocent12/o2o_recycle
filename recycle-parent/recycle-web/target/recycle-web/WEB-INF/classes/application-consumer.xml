@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd" 
+        > 
+      
+<!-- 使用dubbo发布服务 4步-->
+<!-- 提供方应用信息 ，这个相当于起一个名字，我们dubbo管理页面比较清晰是哪个应用暴露出来的 -->
+<dubbo:application name="recycle-web"/>
+<!-- 在zookeeper注册中心 中注册服务 protocol协议
+Address:地址 多个地址,用逗号 隔开 -->
+<!-- <dubbo:registry protocol="zookeeper" address="127.0.0.1:2181"/> -->
+<!--<dubbo:registry address="N/A" /> 可以在开发时使用下 -->
+<!-- 主机端口 
+<dubbo:registry protocol="zookeeper" address="127.0.0.1:2181"/>
+<dubbo:protocol host="127.0.0.1" port="20880"/>-->
+<!-- 声明需要暴露的服务接口 -->
+<dubbo:registry protocol="zookeeper" address="47.106.37.111:2181"/>
+<dubbo:consumer timeout="100000" check="false"/>
+<dubbo:reference interface="user.service.AddressService" id="addressService" group="1"  />
+<dubbo:reference interface="user.service.AdminlogService" id="adminlogService" group="1"  />
+<dubbo:reference interface="user.service.AdminService" id="adminService" group="1"  />
+<dubbo:reference interface="user.service.CollectorService" id="collectorService" group="1"  />
+<dubbo:reference interface="user.service.SellerAddressService" id="sellerAddressService" group="1"  />
+<dubbo:reference interface="user.service.SellerService" id="sellerService" group="1"  />
+<dubbo:reference interface="order.service.OrderinfoService" id="orderinfoService" group="1"  />
+<dubbo:reference interface="catetory.service.ResCategService" id="resourceService" group="1"  />
+<dubbo:reference interface="catetory.service.ResRecordService" id="recordService" group="1"  />
+</beans>

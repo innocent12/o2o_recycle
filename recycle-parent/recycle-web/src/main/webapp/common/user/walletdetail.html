@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>收支记录</title>
+		<link rel="stylesheet" href="../../resource/css/weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/jquery-weui.min.css" />
+		<style>
+			.wallet_detail_item {
+				width: 100%;
+				height: 3rem;
+				border-bottom: 1px solid #E5E5E5;
+			}
+			
+			.wallet_detail_item_content {
+				height: 90%;
+				width: 90%;
+				margin: auto;
+			}
+			
+			.left_content {
+				float: left;
+				overflow: hidden;
+				margin-top: 0.15rem;
+			}
+			
+			.left_content .left_content_operate {
+				text-align: left;
+				font-size: 1rem;
+				color: #09BB07;
+			}
+			
+			.right_content {
+				float: right;
+				overflow: hidden;
+				margin-top: 0.15rem;
+			}
+			
+			.left_content .right_content_time {
+				text-align: right;
+				color: #888888;
+			}
+			
+			.right_content .right_content_money {
+				text-align: right;
+				font-size: 1rem;
+				font-weight: bold;
+				/* 粗体 */
+			}
+		</style>
+		<script src="../../resource/js/jquery.min.js"></script>
+		<script src="../../resource/js/jquery-weui.min.js"></script>
+		<script type="text/javascript" src="../../resource/js/my-weixin.js"/>
+		<script type="text/javascript">
+			/**
+			 * 
+			 * 从缓存中获取用户账号
+			 * 
+			 * 根据用户账号去后台查找该用的相关订单
+			 * 
+			 */
+			$(function(){
+				window.path=getContextPath();
+				var selleraccount = localStorage.account;
+				$.ajax({
+					type: "post",
+					url: "/"+path+"/"+"orderInfo/getOrderIncome?account="+selleraccount,
+					async: true,
+					//data: {},
+					contentType: 'application/json;charset=utf-8',
+					dataType: "json", //设置需要返回的数据类型
+					success: function(data) { //登陆成功后的处理
+						//if(data.)
+						console.log(data[0].finishTime);
+						console.log(data);
+						showwalletdetail(data);
+					},
+					error: function() {
+						$.toast("加载失败", "forbidden"); //提示操作失败
+					}
+				});
+			});
+
+			/**
+			 * 
+			 * 显示收支记录明细
+			 * 
+			 * @param {Object} data
+			 */
+			function showwalletdetail(data) {
+				$.each(data, function(index, content) {
+					//只有当订单状态为待评价或交易完成时才会有交易金额记录存在
+					if(3 == content.orderstate || 4 == content.orderstate) {
+						var con = "";
+						con += '<div class="wallet_detail_item" id="id"><div class="wallet_detail_item_content"><div class="left_content"><div class="left_content_operate">资源出售</div></div><div class="right_content"><div class="right_content_time">'+content.finishTime;
+						con += '</div><div class="right_content_money">+'+content.orderAmount+'</div></div></div></div>';
+						$("#wallet_detail_page").append(con);
+						var wallet = document.getElementById("id");
+						id.setAttribute("id",content.orderId);
+					}
+
+				});
+			}
+		</script>
+	</head>
+
+	<body ontouchstart>
+		<div id="wallet_detail_page">
+		</div>
+		<script src="../../resource/js/jquery.min.js"></script>
+		<script src="../../resource/js/jquery-weui.min.js"></script>
+	</body>
+
+</html>

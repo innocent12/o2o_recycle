@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>注册</title>
+		<link rel="stylesheet" href="../resource/css/weui.min.css" />
+		<link rel="stylesheet" href="../resource/css/jquery-weui.min.css" />
+		<style>
+			#msg {
+				margin: 0.5rem;
+				color: coral;
+				font-size: 12px;
+			}
+		</style>
+		<script src="../resource/js/jquery.min.js"></script>
+		<script src="../resource/js/my-weixin.js"/>
+		<script>
+			$(function() {
+				window.path=getContextPath();
+				var storage = window.localStorage;
+				var getName = storage["name"];
+				var getPhone = storage["phone"];
+				if("" != getName || "" != getPhone) {
+					$('#name').val(getName);
+					$('#phone').val(getPhone);
+				}
+			});
+		</script>
+	</head>
+
+	<body ontouchstart>
+		<form>
+			<div class="weui-cells weui-cells_form">
+
+				<!--姓名-->
+				<div class="weui-cell">
+					<div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" type="text" id="name" placeholder="请输入您的真实姓名">
+					</div>
+				</div>
+
+				<!--电话号码-->
+				<div class="weui-cell">
+					<div class="weui-cell__hd"><label class="weui-label">联系方式</label></div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" type="tel" id="phone" placeholder="请输入联系方式">
+					</div>
+				</div>
+
+				<!--密码-->
+				<div class="weui-cell">
+					<div class="weui-cell__hd"><label class="weui-label">密码</label></div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" type="password" id="pwd" placeholder="请输入8~18位密码">
+					</div>
+				</div>
+
+				<!--确认密码-->
+				<div class="weui-cell">
+					<div class="weui-cell__hd"><label class="weui-label">确认密码</label></div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" type="password" id="repwd" placeholder="请再次输入密码">
+					</div>
+				</div>
+			</div>
+
+			<!--提示-->
+			<div id="msg"></div>
+
+			<!--登录按钮-->
+			<a href="javascript:;" class="weui-btn weui-btn_primary" onclick="register()">注册</a>
+
+			<!--重置按钮-->
+			<a href="javascript:;" class="weui-btn weui-btn_default" onclick="re()">重置</a>
+		</form>
+		<script src="../resource/js/jquery-weui.min.js"></script>
+		<script>
+			/**
+			 * 点击“注册”按钮注册
+			 */
+			function register() {
+				var patternpwd = /^[a-zA-Z\d_]{8,18}$/; //密码正则表达式
+				var patterntel = /^1[0-9]{10}$/; //电话正则表达式
+				var pwd = $('#pwd').val();
+				var repwd = $('#repwd').val();
+				var name = $('#name').val();
+				var phone = $('#phone').val();
+				var msg = document.getElementById("msg");
+
+				var storage = window.localStorage;
+				storage["name"] = name;
+				storage["phone"] = phone;
+
+				if(name == "" || name == null) {
+					msg.innerHTML = "*姓名不可为空！"
+				} else if(phone == "" || phone == null) {
+					msg.innerHTML = "*联系方式不可为空！";
+				} else if(!patterntel.test(phone)) {
+					msg.innerHTML = "*请输入合法的电话号码！";
+				} else if(pwd == "" || pwd == null) {
+					msg.innerHTML = "*密码不可为空！";
+				} else if(!patternpwd.test(pwd)) {
+					msg.innerHTML = "*请输入8~18位密码！";
+				} else if(repwd == "" || repwd == null) {
+					msg.innerHTML = "*确认密码不可为空！";
+				} else if(repwd != pwd) {
+					msg.innerHTML = "*两次输入密码不一致！";
+				} else {
+					msg.innerHTML = "";
+					var code = getQueryVariable("code"); //从url获取code
+					var data = { //设置数据源
+						"pwd": pwd,
+						"name": name,
+						"phone": phone
+					};
+					data = JSON.stringify(data);
+					$.ajax({
+						type: "post",
+						url: "/"+path+"/"+"seller/addseller",
+						async: true,
+						contentType: 'application/json;charset=utf-8',
+						dataType: "json", //设置需要返回的数据类型
+						data: data,
+						success: function(data) { //注册成功后的处理
+							if(data.msg == "success") {
+//								storage["balance"] = 0;
+//								storage["level"] = "0";
+//								storage["account"] = data.selleraccount;
+								$.alert("您的账号为：se"+phone+",请务必牢记！", "注册成功！", function() {
+									window.location.href = "login.html";
+								});
+								
+							} else {
+								$.toast("手机号已被注册", "forbidden");
+							}
+
+						},
+						error: function() {
+							$.toast("注册失败", "forbidden"); //提示操作失败
+						}
+					});
+				}
+			}
+
+			/**
+			 * 获取url指定参数值
+			 * 
+			 * @param {String} variable
+			 */
+			function getQueryVariable(variable) {
+				var query = window.location.search.substring(1);
+				var vars = query.split("&");
+				for(var i = 0; i < vars.length; i++) {
+					var pair = vars[i].split("=");
+					if(pair[0] == variable) {
+						return pair[1];
+					}
+				}
+				return(false);
+			}
+
+			/**
+			 * 页面重置
+			 */
+			function re() {
+				$("form input").val("");
+			}
+		</script>
+	</body>
+
+</html>

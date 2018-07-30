@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>添加订单</title>
+		<link rel="stylesheet" href="../../resource/css/weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/jquery-weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/orderadd.css" />
+	</head>
+
+	<body>
+		<div>
+			<div class="first_part">
+
+				<div class="detailed_res">
+					<span class="headName">资源详录</span>
+					<div class="res_list">
+						<ul id="resource_ul">
+							<li>
+								<form>
+									<div class="detail_list">
+										<span>资源:</span>
+										<input class="type_picker" value="资源类型" name="resource_type1" />
+										<input class="name_picker" value="资源名" name="resource_name1" />
+
+										<div class="res_num">
+											<span>数量:</span>
+											<div class="weui-count">
+												<a class="weui-count__btn weui-count__decrease"></a>
+												<input class="weui-count__number" type="number" value="1" name="resource_value1"><span>KG</span>
+												<a class="weui-count__btn weui-count__increase"></a>
+											</div>
+											<img src="../../resource/images/delete.png" />
+										</div>
+									</div>
+								</form>
+							</li>
+						</ul>
+						<div class="addRes">
+							<a href="javascript:(0);" id="getmore">添加资源</a>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="user_message">
+				<div class="detailed_info">
+					<span class="headName">个人信息</span>
+					<span class="edit">
+						<a href="javascript:(0);" id="toaddressmanage">
+							编辑>>
+						</a>
+					</span>
+					<div class="show_message">
+						<p>
+							<label class="clabel">姓名:</label>
+							<label class="value_label" id="sellername">无</label>
+						</p>
+						<p>
+							<label class="clabel">联系电话:</label>
+							<label class="value_label" id="sellerphone">无</label>
+						</p>
+						<p>
+							<label class="clabel">联系地址:</label>
+							<label class="value_label" id="selleraddress">无</label>
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<!--规避页面信息被覆盖-->
+			<div class="h50"></div>
+
+			<div class="bottomPart">
+				<div class="amount">
+					<span id = 'orderamount'>预算费用：</span>
+				</div>
+				<div class="submmit"  id = "calculate">计算价格</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="../../resource/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../resource/js/jquery-weui.min.js"></script>
+		<script type="text/javascript" src="../../resource/js/orderadd.js"></script>
+		<script type="text/javascript" src="../../resource/js/my-weixin.js"/>
+		<script>
+		
+			getPersonalInfo();
+			window.path=getContextPath();
+			function getPersonalInfo(){
+				if("" != localStorage.name && null != localStorage.name) {
+					$("#sellername").text(localStorage.name);
+				}
+				if("" != localStorage.phone && null != localStorage.phone) {
+					$("#sellerphone").text(localStorage.phone);
+				}
+				if("" != localStorage.selleraddressarea && "" != localStorage.selleraddressdetail && null != localStorage.selleraddressarea && null != localStorage.selleraddressdetail) {
+					$("#selleraddress").text(localStorage.selleraddressarea + localStorage.selleraddressdetail);
+				}
+				var orderamount = getQueryString('amount');
+				if(orderamount != ""){
+					$('#orderamount').text("预算费用："+orderamount + "元");
+				}
+			}
+			
+			/**
+			 * 当通过“我的”进入地址管理时，设置localStorage.authaddressmanage值为1
+			 * 当通过“添加订单”进入地址管理时，设置localStorage.authaddressmanage值为0
+			 */
+			$("#toaddressmanage").click(function(){
+				localStorage.authaddressmanage = 0;
+				window.location.href = "addressmodify.html";
+			});
+		
+			/**
+			 * 动态删除该行
+			 */
+			$(document).on('click','img',function(e){
+				$(this).parent().parent().parent().parent().remove();
+			});
+			
+			/**
+			 * 获取url中的指定元素值
+			 * @param {Object} name
+			 */
+			function getQueryString(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+				var r = window.location.search.substr(1).match(reg);
+				if(r != null) {
+					return unescape(r[2]);
+				}
+				return null;
+			}
+
+			//重新设置规范的input标签名字
+			function resetNamePicker() {
+				var name_pickers = document.getElementsByName('resource_name');
+				var len = name_pickers.length;
+				for(var i = 0; i < name_pickers.length; i++) {
+					var index = i + 1;
+					name_pickers[i].setAttribute('name', 'resource_name' + index);
+				}
+			}
+
+			//计算价格，发布订单控制器
+			$('.submmit').click(function(e){
+				console.log(e);
+				var id = $(this).attr('id');
+				if(id == 'calculate'){
+					
+					$('.submmit').attr('id','publish');
+					$('.submmit').text('发布订单');
+				}else if(id == 'publish'){
+					sub();
+				}
+				console.log(1231+id);
+			})
+			
+			function getOrderamount(){
+				//得到orderid
+				//重新规范name元素名字
+				resetNamePicker();
+
+				var orderid = getQueryString('orderid');
+				var d = {};
+				//var li = document.getElementsByTagName("li")[0];
+				var r = $('form').serializeArray();
+				//逐个遍历数组对象
+				$.each(r, function() {
+					if("" != this.value && null != this.value) {
+						d[this.name] = this.value;
+					}
+				});
+				//输出到console
+				var str = JSON.stringify(d);
+				console.log(d);
+				//console.log(d[1]);
+				var array = [];
+				var count = 0;
+				var obj = {
+					'resourceType': '',
+					'resourceName': '',
+					'resourceValue': ''
+				};
+				//将表单对象格式化
+				$.each(d, function(index, content) {
+					//console.log(content+index);
+					if(index.match(/resource_type/i)) {
+						obj['resourceType'] = content;
+					} else if(index.match(/resource_name/i)) {
+						obj['resourceName'] = content;
+					} else if(index.match(/resource_value/i)) {
+						obj['resourceValue'] = content;
+					}
+					count++;
+					if(count == 3) {
+						count = 0;
+						array.push(obj);
+						obj = {
+							'resourceType': '',
+							'resourceName': '',
+							'resourceValue': ''
+						};
+					}
+				});
+				//输出结果
+				//array.
+
+				//array = JSON.stringify(array);
+
+				console.log(array);
+				var account = localStorage.account;
+				$.ajax({
+					type: "post",
+					dataType: "json",
+					//需要设置提交格式为表单格式
+					//contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+					async: true,
+					url: "/"+path+"/"+"record/getTotal?orderid=" + orderid,
+					data: {
+						array: JSON.stringify(array)
+					},
+					success: function(result) {
+						//成功跳转至首页
+						if(result.msg == "fail") {
+							$.toast("计算失败", "cancel");
+						} else if(result.msg == "success") {
+							var resAmount = result.allAmount;
+							$('#orderamount').text("预算费用："+orderamount+ resAmount+ "元");
+						}
+
+					},
+					error: function() {
+						console.log('fail');
+					}
+				});
+			}
+			
+			
+			
+			function sub() {
+				//得到orderid
+				//重新规范name元素名字
+				resetNamePicker();
+
+				var orderid = getQueryString('orderid');
+				var d = {};
+				//var li = document.getElementsByTagName("li")[0];
+				var r = $('form').serializeArray();
+				//逐个遍历数组对象
+				$.each(r, function() {
+					if("" != this.value && null != this.value) {
+						d[this.name] = this.value;
+					}
+				});
+				//输出到console
+				var str = JSON.stringify(d);
+				console.log(d);
+				//console.log(d[1]);
+				var array = [];
+				var count = 0;
+				var obj = {
+					'resourceType': '',
+					'resourceName': '',
+					'resourceValue': ''
+				};
+				//将表单对象格式化
+				$.each(d, function(index, content) {
+					//console.log(content+index);
+					if(index.match(/resource_type/i)) {
+						obj['resourceType'] = content;
+					} else if(index.match(/resource_name/i)) {
+						obj['resourceName'] = content;
+					} else if(index.match(/resource_value/i)) {
+						obj['resourceValue'] = content;
+					}
+					count++;
+					if(count == 3) {
+						count = 0;
+						array.push(obj);
+						obj = {
+							'resourceType': '',
+							'resourceName': '',
+							'resourceValue': ''
+						};
+					}
+				});
+				//输出结果
+				//array.
+
+				//array = JSON.stringify(array);
+
+				console.log(array);
+				var account = localStorage.account;
+				$.ajax({
+					type: "post",
+					dataType: "json",
+					//需要设置提交格式为表单格式
+					//contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+					async: true,
+					url: "/"+path+"/"+"record/addRecord?orderid=" + orderid,
+					data: {
+						array: JSON.stringify(array)
+					},
+					success: function(result) {
+						//成功跳转至首页
+						if(result.msg == "fail") {
+							$.toast("添加失败", "cancel");
+						} else if(result.msg == "success") {
+							$.toast("操作成功");
+							var test = JSON.stringify(result);
+							localStorage.setItem("testName", test);
+							var getTest = localStorage.getItem("testName");
+							console.log("local data:" + getTest);
+							window.location.href = 'order.html';
+						}
+
+					},
+					error: function() {
+						console.log('fail');
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

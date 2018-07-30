@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1, user-scalable=no">
+		<title>地图一览</title>
+		<link rel="stylesheet" href="../../resource/css/weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/jquery-weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/index.css" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="百度地图,百度地图API，百度地图自定义工具，百度地图所见即所得工具" />
+		<meta name="description" content="百度地图API自定义地图，帮助用户在可视化操作下生成百度地图" />
+		<style type="text/css">
+			html,
+			body {
+				margin: 0;
+				padding: 0;
+			}
+			
+			.cover{
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 100%;
+				width: 100%;
+				z-index: 2;
+				background: white;
+				/*display: none;*/
+			}
+			
+			.iw_poi_title {
+				color: #CC5522;
+				font-size: 14px;
+				font-weight: bold;
+				overflow: hidden;
+				padding-right: 13px;
+				white-space: nowrap
+			}
+			
+			.iw_poi_content {
+				font: 12px arial, sans-serif;
+				overflow: visible;
+				padding-top: 4px;
+				white-space: -moz-pre-wrap;
+				word-wrap: break-word
+			}
+			
+			#dituContent {
+				width: 100%;
+				height: 84%;
+				border: #ccc solid 1px;
+				display: none;
+			}
+			
+			#showposition{
+				display: none;
+			}
+		</style>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=65DT8PNu6Atlmmq8G6OH2v8gGGPxTOXy"></script>
+		<script src="../../resource/js/jquery.min.js"></script>
+		<script src="../../resource/js/jquery-weui.min.js"></script>
+		<script src="../../resource/js/fastclick.js"></script>
+		<script src="../../resource/js/my-weixin.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				window.path=getContextPath();
+				$.showLoading("数据加载中");
+				
+				setTimeout("change()",3000);
+
+				var code = getQueryString('code');
+				OpenidLogin(code);
+				if(localStorage['identity'] == 1) {
+					alert('亲，您没有回收员权限哦');
+					window.location.href = "common/user/index.html";
+				}
+				var arr;
+				var account = localStorage['account'];
+				var datas = {
+					'collectoraccount': account
+				};
+				//js对象转为json
+				datas = JSON.stringify(datas);
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					url: "/"+path+"/"+'orderInfo/getOrderPosition',
+					contentType: 'application/json;charset=utf-8',
+					async: true,
+					data: datas,
+					success: function(result) {
+						console.log(result + "success");
+						//js对象转为json
+						arr = JSON.stringify(result);
+						console.log(arr);
+						window.arr = arr;
+					},
+					error: function(result) {
+						console.log(result + "error");
+
+					}
+				});
+			});
+			
+			
+			function change(){
+				$.hideLoading();
+				$(".cover").css("display","none");
+				$("#dituContent").css("display","block");
+				$("#showposition").css("display","block");
+			}
+		</script>
+	</head>
+
+	<body ontouchstart>
+		<div class="cover"></div>
+		<div class="weui-tab">
+			<!--百度地图容器-->
+			<div id="dituContent"></div>
+			<input id="showposition" type="button" onclick="addPoint();" value="显示订单位置" />
+			<!--主体页面-->
+			<div class="weui-tab__bd">
+
+				<!--订单-->
+				<div id="tab2" class="weui-tab__bd-item weui-tab__bd-item--active">
+
+					<!--规避下方内容被导航条覆盖-->
+					<div class="h50"></div>
+				</div>
+
+			</div>
+
+			<!--底部导航栏-->
+			<div class="weui-tabbar">
+				<a href="order.html" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img src="../../resource/images/icon_nav_button.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">
+						订单
+					</p>
+				</a>
+				<a href="map.html" class="weui-tabbar__item weui-bar__item--on">
+					<div class="weui-tabbar__icon">
+						<img src="../../resource/images/icon_nav_article.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">
+						地图
+					</p>
+				</a>
+				<a href="self.html" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img src="../../resource/images/icon_nav_cell.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">
+						我的
+					</p>
+				</a>
+			</div>
+		</div>
+
+		<script>
+			$(function() {
+				FastClick.attach(document.body);
+			});
+
+			function exit() {
+				$.confirm("您确认要退出本系统吗？", "确认退出");
+			}
+		</script>
+	</body>
+	<script type="text/javascript">
+		/* var arr = [{'xsite':'114.441704','ysite':'30.424382','addressDetailed':'1','phone':'12345643','orderId':'1'},
+		           {'xsite':'114.3129016963','ysite':'30.3497717074','addressDetailed':'2','phone':'12345643','orderId':'2'},
+		           {'xsite':'114.3025645665','ysite':'30.3497717074','addressDetailed':'3','phone':'12345643','orderId':'3'},
+		           {'xsite':'114.256566','ysite':'30.4122131','addressDetailed':'4','phone':'12345643','orderId':'4'},
+		           {'xsite':'114.403255','ysite':'30.333333','addressDetailed':'5','phone':'12345643','orderId':'5'},
+		           {'xsite':'114.355222','ysite':'30.325665','addressDetailed':'6','phone':'12345643','orderId':'6'},
+		           {'xsite':'114.4331704','ysite':'30.414382','addressDetailed':'7','phone':'12345643','orderId':'7'}];
+			  */
+		//////分割线
+
+		//创建和初始化地图函数：
+		function initMap() {
+			createMap(); //创建地图
+			setMapEvent(); //设置地图事件
+			addMapControl(); //向地图添加控件
+			//addPoint(arr); 
+		}
+
+		//创建地图函数：
+		function createMap() {
+			var map = new BMap.Map("dituContent"); //在百度地图容器中创建一个地图
+			var point = new BMap.Point(114.441704, 30.424382); //定义一个中心点坐标
+			map.centerAndZoom("湖北省", 12); //设定地图的中心点和坐标并将地图显示在地图容器中
+			//var marker1 = new BMp.Marker(point);
+			//map.addOverlay(marker1);
+			window.map = map; //将map变量存储在全局
+		}
+
+		//地图添加点
+		//覆盖物数组
+		function addPoint() {
+			//arr = JSON.parse(arr);
+			console.log(arr);
+			for(var i = 0; i < arr.length; i++) {
+				var point = new BMap.Point(arr[i].ysite, arr[i].xsite);
+				var marker = new BMap.Marker(point);
+				//allMarkers[i]=marker;
+				var content = "详细位置:" + arr[i].addressdetail + "<br />" +
+					"卖家电话:" + arr[i].phone + "<br /> " +
+					"订单号:	" + arr[i].orderid + "<br />";
+				map.addOverlay(marker);
+				addClickHandle(content, marker);
+			}
+		}
+
+		//定义信息窗口样式
+		var opts = opts = {
+			width: 200, // 信息窗口宽度  
+			height: 100, // 信息窗口高度  
+			title: "订单信息", // 信息窗口标题  
+			enableMessage: true //设置允许信息窗发送短信 
+		};
+		//添加覆盖物监听器
+		function addClickHandle(content, marker) {
+			marker.addEventListener("click", function(e) {
+				openInfo(" " + content, e);
+			});
+		}
+
+		//开启对应标点的信息窗口
+		function openInfo(content, e) {
+			var p = e.target;
+			var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+			var infoWindow = new BMap.InfoWindow(content, opts);
+			map.openInfoWindow(infoWindow, point);
+		}
+
+		/* //添加标注
+    function addMarker(point, index) {
+        var myIcon = new BMap.Icon("http://api.map.baidu.com/img/markers.png",
+              new BMap.Size(23, 25), {
+                       offset: new BMap.Size(10, 25),
+                        imageOffset: new BMap.Size(0, 0 - index * 25)
+                });
+               var marker = new BMap.Marker(point, {
+                     icon: myIcon
+                  });
+                 map.addOverlay(marker);
+                   return marker;
+	} */
+
+		//地图事件设置函数：
+		function setMapEvent() {
+			//map.enableDragging();//启用地图拖拽事件，默认启用(可不写)
+			map.enableScrollWheelZoom(true); //启用地图滚轮放大缩小
+			//map.enableDoubleClickZoom();//启用鼠标双击放大，默认启用(可不写)
+			map.enableKeyboard(); //启用键盘上下左右键移动地图
+		}
+
+		//地图控件添加函数：
+		function addMapControl() {
+			//向地图中添加缩放控件
+			var ctrl_nav = new BMap.NavigationControl({
+				anchor: BMAP_ANCHOR_TOP_LEFT,
+				type: BMAP_NAVIGATION_CONTROL_LARGE
+			});
+			map.addControl(ctrl_nav);
+			//向地图中添加缩略图控件
+			var ctrl_ove = new BMap.OverviewMapControl({
+				anchor: BMAP_ANCHOR_BOTTOM_RIGHT,
+				isOpen: 1
+			});
+			map.addControl(ctrl_ove);
+			//向地图中添加比例尺控件
+			var ctrl_sca = new BMap.ScaleControl({
+				anchor: BMAP_ANCHOR_BOTTOM_LEFT
+			});
+			map.addControl(ctrl_sca);
+			//向地图添加定位控件
+			var ctrl_location = new BMap.GeolocationControl();
+			map.addControl(ctrl_location);
+		}
+
+		initMap(); //创建和初始化地图
+	</script>
+
+</html>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:context="http://www.springframework.org/schema/context" 
+		xmlns:aop="http://www.springframework.org/schema/aop" 
+		xmlns:tx="http://www.springframework.org/schema/tx" 
+		xmlns:task="http://www.springframework.org/schema/task"
+		xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+		xmlns:mvc="http://www.springframework.org/schema/mvc" 
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+						     http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+						     http://www.springframework.org/schema/mvc
+						     http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd 
+						     http://www.springframework.org/schema/context 
+						     http://www.springframework.org/schema/context/spring-context-4.3.xsd 
+						     http://www.springframework.org/schema/aop 
+						     http://www.springframework.org/schema/aop/spring-aop-4.3.xsd 
+						     http://www.springframework.org/schema/tx 
+						     http://www.springframework.org/schema/tx/spring-tx-4.3.xsd 
+						     http://www.springframework.org/schema/task 
+						     http://www.springframework.org/schema/task/spring-task-4.3.xsd 
+						     http://code.alibabatech.com/schema/dubbo 
+						     http://code.alibabatech.com/schema/dubbo/dubbo.xsd 
+						     http://www.springframework.org/schema/mvc 
+						     http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd ">
+						
+		 <!-- 自动扫描 -->
+<!--     <context:component-scan base-package="category">
+		  <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>  	
+	</context:component-scan> -->
+	
+	<!-- 扫描服务层的包 -->
+	<context:component-scan base-package="category.service"/>
+	<context:component-scan base-package="user.service"/>
+	<context:component-scan base-package="order.service"/>
+	<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+	
+ 	<dubbo:application name="recycle-test"/>
+	<dubbo:registry protocol="zookeeper" address="localhost:2181"/>
+	<dubbo:consumer timeout="100000" check="false"/>
+	<dubbo:reference interface="user.service.AddressService" id="addressService" group="1"  />
+	<dubbo:reference interface="user.service.AdminlogService" id="adminlogService" group="1"  />
+	<dubbo:reference interface="user.service.AdminService" id="adminService" group="1"  />
+	<dubbo:reference interface="user.service.CollectorService" id="collectorService" group="1"  />
+	<dubbo:reference interface="user.service.SellerAddressService" id="sellerAddressService" group="1"  />
+	<dubbo:reference interface="user.service.SellerService" id="sellerService" group="1"  />
+	<dubbo:reference interface="order.service.OrderInfoService" id="orderinfoService" group="1"  />
+	<dubbo:reference interface="category.service.ResCategService" id="resourceService" group="1"  />
+	<dubbo:reference interface="category.service.ResRecordService" id="recordService" group="1"  />
+</beans>

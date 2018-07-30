@@ -1,0 +1,111 @@
+@CHARSET "UTF-8";
+span {
+	font-size: 15px;
+}
+
+.first_part {
+	padding: 5px;
+}
+
+.detailed_res {
+	background-color: #F4F4F4;
+	border: 1px solid #E5E5E5;
+}
+
+.headName {
+	padding-left: 10px;
+	font-size: 22px;
+	font-family: "微软雅不黑", "微软雅黑", "黑体", sans-serif;
+}
+
+.type_picker {
+	width: 40px;
+	overflow: hidden;
+}
+
+.name_picker {
+	width: 40px;
+	overflow: hidden;
+}
+
+.res_list {
+	border-top: 1px solid #E5E5E5;
+}
+
+.detail_list {
+	margin: 10px;
+}
+
+.res_num {
+	float: right;
+}
+
+.addRes {
+	border-top: 1px solid #E5E5E5;
+	text-align: center;
+}
+
+.addRes a {
+	color: #6A7FA6;
+}
+
+.detailed_info {
+	border: 1px solid #E5E5E5;
+	margin: 5px;
+	background-color: #F4F4F4;
+}
+
+.detailed_info .edit {
+	float: right;
+	font-size: 20px;
+}
+
+.detailed_info .edit a {
+	color: #6A7FA6;
+}
+
+.show_message {
+	border-top: 1px solid #E5E5E5;
+	padding-left: 10px;
+}
+
+.show_message p {
+	padding: 5px 0;
+}
+
+.show_message p label {
+	font-size: 15px;
+}
+
+.bottomPart {
+	border-top: 1px solid #E5E5E5;
+	position: fixed;
+	background-color: #FFFFFF;
+	bottom: 0px;
+	width: 100%;
+	height: 2.5rem;
+}
+
+.amount {
+	float: left;
+}
+
+.bottomPart span {
+	line-height: 2.5rem;
+	padding-left: 1rem;
+}
+
+.bottomPart .submmit {
+	float: right;
+	line-height: 2.5rem;
+	width: 5rem;
+	height: 100%;
+	background: darkorange;
+	font-size: 20px;
+	text-align: center;
+	color: #FFFFFF;
+}
+
+.h50 {
+	height: 3rem;
+}

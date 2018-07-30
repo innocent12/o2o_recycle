@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1, user-scalable=no">
+		<title>首页</title>
+		<link rel="stylesheet" href="../../resource/css/weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/jquery-weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/index.css" />
+	</head>
+
+	<body ontouchstart>
+		<div class="weui-tab">
+			<!--主体页面-->
+			<div class="weui-tab__bd">
+				<!--首页-->
+				<div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
+
+					<!--顶部搜索框-->
+					<div class="weui-search-bar" id="searchBar">
+						<form class="weui-search-bar__form">
+							<div class="weui-search-bar__box">
+								<i class="weui-icon-search"></i>
+								<input type="search" class="weui-search-bar__input" id="searchInput" placeholder="搜索" required="">
+								<a href="javascript:" class="weui-icon-clear" id="searchClear"></a>
+							</div>
+							<label class="weui-search-bar__label" id="searchText"> <i class="weui-icon-search"></i> <span>搜索</span> </label>
+						</form>
+						<a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">
+							取消
+						</a>
+					</div>
+
+					<!--首页轮播图-->
+					<div class="swiper-container" data-space-between='10' data-pagination='.swiper-pagination' data-autoplay="1000">
+						<div class="swiper-wrapper">
+							<div class="swiper-slide">
+								<img src="../../resource/images/banner_one.jpg" alt="">
+							</div>
+							<div class="swiper-slide">
+								<img src="../../resource/images/banner_two.jpg" alt="">
+							</div>
+						</div>
+					</div>
+
+					<!--备用搜索框：此搜索框置于轮播图中部略靠下方处-->
+					<!--<a href="common/search.html" class="search">
+					请输入搜索内容...
+					</a>-->
+
+					<!--条目集合-->
+					<div class="weui-grids">
+						<!--纸类-->
+						<a href="resourceintrodution.html#paper" class="weui-grid js_grid">
+							<div class="weui-grid__icon">
+								<img src="../../resource/images/icon_submenu_paper.png" alt="">
+							</div>
+							<p class="weui-grid__label">
+								纸类
+							</p>
+						</a>
+						<!--废塑料-->
+						<a href="resourceintrodution.html#plastics" class="weui-grid js_grid">
+							<div class="weui-grid__icon">
+								<img src="../../resource/images/icon_submenu_plastics.png" alt="">
+							</div>
+							<p class="weui-grid__label">
+								塑料
+							</p>
+						</a>
+						<!--小家电-->
+						<a href="user_resource_introdution.html#lemp" class="weui-grid js_grid">
+							<div class="weui-grid__icon">
+								<img src="../../resource/images/icon_submenu_lemp.png" alt="">
+							</div>
+							<p class="weui-grid__label">
+								小家电
+							</p>
+						</a>
+						<!--洗衣机-->
+						<a href="resourceintrodution.html#washer" class="weui-grid js_grid">
+							<div class="weui-grid__icon">
+								<img src="../../resource/images/icon_submenu_washer.png" alt="">
+							</div>
+							<p class="weui-grid__label">
+								洗衣机
+							</p>
+						</a>
+						<!--空调-->
+						<a href="resourceintrodution.html#conditioner" class="weui-grid js_grid">
+							<div class="weui-grid__icon">
+								<img src="../../resource/images/icon_submenu_conditioner.png" alt="">
+							</div>
+							<p class="weui-grid__label">
+								空调
+							</p>
+						</a>
+						<!--电冰箱-->
+						<a href="resourceintrodution.html#refrigerator" class="weui-grid js_grid">
+							<div class="weui-grid__icon">
+								<img src="../../resource/images/icon_submenu_refrigerator.png" alt="">
+							</div>
+							<p class="weui-grid__label">
+								电冰箱
+							</p>
+						</a>
+						<!--电视机-->
+						<a href="resourceintrodution.html#tv" class="weui-grid js_grid">
+							<div class="weui-grid__icon">
+								<img src="../../resource/images/icon_submenu_tv.png" alt="">
+							</div>
+							<p class="weui-grid__label">
+								电视机
+							</p>
+						</a>
+						<!--废电脑-->
+						<a href="resourceintrodution.html#computer" class="weui-grid js_grid">
+							<div class="weui-grid__icon">
+								<img src="../../resource/images/icon_submenu_computer.png" alt="">
+							</div>
+							<p class="weui-grid__label">
+								电脑
+							</p>
+						</a>
+						<!--废手机-->
+						<a href="resourceintrodution.html#phone" class="weui-grid js_grid">
+							<div class="weui-grid__icon">
+								<img src="../../resource/images/icon_submenu_phone.png" alt="">
+							</div>
+							<p class="weui-grid__label">
+								手机
+							</p>
+						</a>
+						<!--废电池-->
+						<a href="resourceintrodution.html#cell" class="weui-grid js_grid">
+							<div class="weui-grid__icon">
+								<img src="../../resource/images/icon_submenu_cell.png" alt="">
+							</div>
+							<p class="weui-grid__label">
+								电池
+							</p>
+						</a>
+						<!--废金属-->
+						<a href="resourceintrodution.html#metal" class="weui-grid js_grid">
+							<div class="weui-grid__icon">
+								<img src="../../resource/images/icon_submenu_metal.png" alt="">
+							</div>
+							<p class="weui-grid__label">
+								金属
+							</p>
+						</a>
+						<!--厨房五金-->
+						<a href="resourceintrodution.html#kitchen" class="weui-grid js_grid">
+							<div class="weui-grid__icon">
+								<img src="../../resource/images/icon_submenu_kitchen.png" alt="">
+							</div>
+							<p class="weui-grid__label">
+								厨房五金
+							</p>
+						</a>
+						<!--旧衣物-->
+						<a href="resourceintrodution.html#clothes" class="weui-grid js_grid">
+							<div class="weui-grid__icon">
+								<img src="../../resource/images/icon_submenu_clothes.jpg" alt="">
+							</div>
+							<p class="weui-grid__label">
+								衣物
+							</p>
+						</a>
+						<!--报废汽车-->
+						<a href="resourceintrodution.html#car" class="weui-grid js_grid">
+							<div class="weui-grid__icon">
+								<img src="../../resource/images/icon_submenu_car.png" alt="">
+							</div>
+							<p class="weui-grid__label">
+								报废汽车
+							</p>
+						</a>
+						<!--其他-->
+						<a href="resourceintrodution.html#other" class="weui-grid js_grid">
+							<div class="weui-grid__icon">
+								<img src="../../resource/images/icon_submenu_other.png" alt="">
+							</div>
+							<p class="weui-grid__label">
+								其他
+							</p>
+						</a>
+					</div>
+					<!--规避下方内容被导航条覆盖-->
+					<div class="h50"></div>
+				</div>
+			</div>
+
+			<!--添加订单悬浮按钮-->
+			<a href="orderadd.html" class="suspendAddButton"></a>
+
+			<!--底部导航栏-->
+			<div class="weui-tabbar">
+				<a href="index.html" class="weui-tabbar__item weui-bar__item--on">
+					<div class="weui-tabbar__icon">
+						<img src="../../resource/images/icon_nav_button.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">
+						首页
+					</p>
+				</a>
+				<a href="order.html" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img src="../../resource/images/icon_nav_article.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">
+						订单
+					</p>
+				</a>
+				<a href="self.html" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img src="../../resource/images/icon_nav_cell.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">
+						我的
+					</p>
+				</a>
+			</div>
+		</div>
+
+		<script src="../../resource/js/jquery.min.js"></script>
+		<script src="../../resource/js/jquery-weui.min.js"></script>
+		<script src="../../resource/js/swiper.min.js"></script>
+		<script src="../../resource/js/apple.js"></script>
+		<script src="../../resource/js/fastclick.js"></script>
+		<script src="../../resource/js/my-weixin.js"></script>
+		<script>
+			$(function() {
+				window.path=getContextPath();
+				FastClick.attach(document.body);
+			});
+			
+			$('.swiper-container').click(function(){
+				var getTest = localStorage.getItem("testName");
+				localStorage.clear();
+				alert("local storage:"+getTest);
+				console.log("local storage:"+getTest);
+			});
+			
+			
+			var code = getQueryString('code');
+			OpenidLogin(code);
+			if(localStorage['identity'] == 2){
+				window.location.href = "/"+path+"/"+"common/collector/order.html";
+			}
+			
+		</script>
+	</body>
+
+</html>

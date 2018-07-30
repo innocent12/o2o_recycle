@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>发表评价</title>
+		<link rel="stylesheet" href="../../resource/css/weui.min.css" />
+		<link rel="stylesheet" href="../../resource/css/jquery-weui.min.css" />
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+				list-style-type: none;
+			}
+			
+			body {
+				color: #666;
+				font: 12px/1.5 Arial;
+			}
+			
+			ul,
+			#star span {
+				float: left;
+				display: inline;
+				height: 19px;
+				line-height: 19px;
+			}
+			
+			li {
+				float: left;
+				width: 24px;
+				cursor: pointer;
+				text-indent: -9999px;
+				background: url(../../resource/images/star.png) no-repeat;
+			}
+			
+			strong {
+				color: #f60;
+				padding-left: 10px;
+			}
+			
+			li.on {
+				background-position: 0 -28px;
+			}
+			
+			p {
+				position: absolute;
+				top: 20px;
+				width: 159px;
+				height: 60px;
+				display: none;
+				background: url(../../resource/images/icon.gif) no-repeat;
+				padding: 7px 10px 0;
+			}
+			
+			p em {
+				color: #f60;
+				display: block;
+				font-style: normal;
+			}
+		</style>
+
+	</head>
+
+	<body ontouchstart>
+		<div id="estimate_page">
+			<div class="weui-cells weui-cells_form">
+
+				<div class="weui-cell weui-cell_vcode">
+
+					<div class="weui-cell__hd">
+						<label class="weui-label">评价</label>
+					</div>
+					<div class="weui-cell__bd">
+						<ul>
+
+							<li>
+								<a href="javascript:;">1</a>
+							</li>
+
+							<li>
+								<a href="javascript:;">2</a>
+							</li>
+
+							<li>
+								<a href="javascript:;">3</a>
+							</li>
+
+							<li>
+								<a href="javascript:;">4</a>
+							</li>
+
+							<li>
+								<a href="javascript:;">5</a>
+							</li>
+
+						</ul>
+					</div>
+					<div class="weui-cell__ft">
+						<button class="weui-vcode-btn">
+							<span>0分(未评价)</span>
+						</button>
+					</div>
+				</div>
+				<div class="weui-cell">
+					<div class="weui-cell__bd">
+						<textarea class="weui-textarea" placeholder="请输入您的留言..." rows="3" id="sellerMessage"></textarea>
+						<div class="weui-textarea-counter"><span>0</span>/200</div>
+					</div>
+				</div>
+				<a href="javascript:;" class="weui-btn weui-btn_primary" onclick="issueMessage()">发布评价</a>
+			</div>
+
+		</div>
+
+		<script src="../../resource/js/jquery.min.js"></script>
+		<script src="../../resource/js/jquery-weui.min.js"></script>
+		<script src="../../resource/js/my-weixin.js"/>
+		<script>
+			var level;
+			window.path=getContextPath();
+			/**
+			 * 
+			 * 评价
+			 * 
+			 */
+			window.onload = function() {
+				var aLi = $('li');
+				var oSpan = document.getElementsByTagName("span")[0];
+				var i = iScore = iStar = 0;
+				var aMsg = [
+					"很不满意|非常差",
+					"不满意|差",
+					"一般|一般",
+					"满意|好",
+					"非常满意|非常好"
+				]
+
+				for(i = 1; i <= aLi.length; i++) {
+					aLi[i - 1].index = i;
+					//点击后进行评分处理
+					aLi[i - 1].onclick = function() {
+						iStar = this.index;
+						fnPoint(this.index);
+						oSpan.innerHTML = "<strong>" + (this.index) + " 分</strong> (" + aMsg[this.index - 1].match(/\|(.+)/)[1] + ")";
+						level = this.index;
+					}
+				}
+
+				/**
+				 * 评分处理
+				 * 
+				 * @param {Object} iArg
+				 */
+				function fnPoint(iArg) {
+					//分数赋值
+					iScore = iArg || iStar;
+					for(i = 0; i < aLi.length; i++) aLi[i].className = i < iScore ? "on" : "";
+					level = iScore;
+				}
+			};
+			
+			/**
+			 * 获取url中的参数
+			 * 
+			 * @param {Object} name
+			 */
+			function getQueryString(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+				var r = window.location.search.substr(1).match(reg);
+				if(r != null) {
+					return unescape(r[2]);
+				}
+				return null;
+			}
+			
+			/**
+			 * 提交评价
+			 */
+			function issueMessage() {
+				var id = getQueryString("orderid");
+				var Message = $('#sellerMessage').val();
+//				window.location.href = "/"+path+"/"+'orderInfo/addSellermessage?orderId=' + orderid + '&Message=' + Message + '&level=' + level;
+				var data = {
+						"id":id,
+						"Message":Message,
+						"level":level
+					};
+				
+				$.ajax({
+					type:'POST',
+					dataType:'json',
+					url:"/"+path+"/"+'orderInfo/addSellermessage',
+					contentType:'application/json;charset=utf-8',
+					async:true,
+					data: JSON.stringify(data),
+					success:function(result){
+						var message = result.msg;
+						if(message == 'success'){
+							window.location.href="/"+path+"/"+'common/user/order.html';
+						}else if(message == 'fail'){
+							window.location.href="/"+path+"/"+'common/user/estimate.html';
+						}
+//						console.log(result);
+//						window.location.href="order.html";
+					},
+					error:function(){
+//						console.log('fail'+JSON.stringify(result));
+//						alert('评价失败，请稍后再试');
+						$.toast("评价失败", "forbidden"); //提示操作失败
+					}
+				}); 
+			}
+
+		</script>
+
+	</body>
+
+</html>
