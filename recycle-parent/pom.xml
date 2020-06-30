@@ -26,7 +26,7 @@
         <mysql.version>5.1.6</mysql.version>
         <druid.version>1.1.4</druid.version>
         <slf4j.version>1.8.0-alpha2</slf4j.version>
-        <jackson.version>2.9.1</jackson.version>
+        <jackson.version>2.11.1</jackson.version>
         <jstl.version>1.2</jstl.version>
         <commons-lang3.version>3.5</commons-lang3.version>
         <commons-collection.version>3.2.1</commons-collection.version>
