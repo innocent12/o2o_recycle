@@ -46,7 +46,7 @@
         <shiro.version>1.4.0</shiro.version>
         <json.version>20171018</json.version>
         <commons.version>1.4</commons.version>
-        <logback.version>1.1.2</logback.version>
+        <logback.version>1.2.0</logback.version>
         <netty-all.version>4.1.9.Final</netty-all.version>
         <rocketmq.version>3.2.6</rocketmq.version>
         
